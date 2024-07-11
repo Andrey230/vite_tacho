@@ -3,6 +3,8 @@ import { redirect } from "react-router-dom";
 import {useNotification} from "../pages/root";
 import {NotificationTypes} from "../constants/NotificationTypes";
 
+const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
+
 const AuthContext = createContext({});
 
 export const useAuth = () => useContext(AuthContext);
@@ -21,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (credentials) => {
         try {
-            const response = await fetch("/api/login", {
+            const response = await fetch(baseUrl + "/api/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
