@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
     const signUp = async (credentials) => {
         try {
-            const response = await fetch("/api/users/create", {
+            const response = await fetch(baseUrl + "/api/users/create", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
 
     const uploadDriver = async (credentials) => {
         try {
-            const response = await fetch("/api/driver/upload", {
+            const response = await fetch(baseUrl + "/api/driver/upload", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
 
     const uploadDriverFile = async (driver) => {
         try {
-            const response = await fetch(`/api/drivers/${driver}/upload`, {
+            const response = await fetch(baseUrl + `/api/drivers/${driver}/upload`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
 
     const getActivitiesByMonth = async (month) => {
         try {
-            const response = await fetch("/api/users/month/" + month, {
+            const response = await fetch(baseUrl + "/api/users/month/" + month, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ export const AuthProvider = ({ children }) => {
 
     const getUserInfo = async (token) => {
         try {
-            const response = await fetch("/api/user", {
+            const response = await fetch(baseUrl + "/api/user", {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

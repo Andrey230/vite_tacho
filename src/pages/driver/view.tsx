@@ -9,7 +9,7 @@ export async function loader({ params }) {
     let driver = {};
 
     try {
-        const response = await fetch("/api/driver/"+params.driver_id, {
+        const response = await fetch(baseUrl + "/api/driver/"+params.driver_id, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
