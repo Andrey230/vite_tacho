@@ -36,7 +36,7 @@ export default function Login(){
                 email: email,
                 password: password
             });
-            navigate('/profile');
+            navigate('/');
 
         }catch (error){
             console.log(error);

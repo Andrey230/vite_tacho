@@ -35,7 +35,7 @@ export default function Header(){
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                             {user ? <>
                                     <li>
-                                        <Link to="/profile" onClick={closeDropdown}>Profile</Link>
+                                        <Link to="/" onClick={closeDropdown}>Profile</Link>
                                     </li>
                                     <li>
                                         <Link to="/statistics" onClick={closeDropdown}>Statistics</Link>

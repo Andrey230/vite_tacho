@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Home />,
+                element: <Profile />,
                 //loader: homeLoader,
             },
             {
@@ -37,10 +37,10 @@ const router = createBrowserRouter([
                 element: <Login />,
                 loader: loginLoader
             },
-            {
-                path: "/profile",
-                element: <Profile />
-            },
+            // {
+            //     path: "/profile",
+            //     element: <Profile />
+            // },
             {
                 path: "/statistics",
                 element: <Statistics />
