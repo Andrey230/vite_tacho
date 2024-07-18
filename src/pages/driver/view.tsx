@@ -61,31 +61,33 @@ export default function View(){
 
             <br />
 
-            <div className="stats stats-vertical lg:stats-horizontal shadow">
+            <div className="stats shadow mt-5">
+                <div className="stats stats-horizontal shadow">
 
-                <div className="stat">
-                    <div className="stat-title">Km per month</div>
-                    <div className="stat-value text-xl">{activities[activeMonth].totalDistance}</div>
+                    <div className="stat">
+                        <div className="stat-title">Km per month</div>
+                        <div className="stat-value text-xl">{activities[activeMonth].totalDistance}</div>
+                    </div>
+
+                    <div className="stat">
+                        <div className="stat-title">Km per day</div>
+                        <div className="stat-value text-xl">{activities[activeMonth].averageDistance.toFixed(2)}</div>
+                    </div>
+
+                    <div className="stat">
+                        <div className="stat-title">Points</div>
+                        <div className="stat-value text-xl">{activities[activeMonth].totalPoints}</div>
+                    </div>
+
+                    <div className="stat">
+                        <div className="stat-title">Work days</div>
+                        <div className="stat-value text-xl">{activities[activeMonth].totalWorkDays} <span className="text-gray-400">{activities[activeMonth].totalUnknownDays > 0 ? `+ (${activities[activeMonth].totalUnknownDays})` : ""}</span></div>
+                    </div>
+
                 </div>
-
-                <div className="stat">
-                    <div className="stat-title">Km per day</div>
-                    <div className="stat-value text-xl">{activities[activeMonth].averageDistance.toFixed(2)}</div>
-                </div>
-
-                <div className="stat">
-                    <div className="stat-title">Points</div>
-                    <div className="stat-value text-xl">{activities[activeMonth].totalPoints}</div>
-                </div>
-
-                <div className="stat">
-                    <div className="stat-title">Work days</div>
-                    <div className="stat-value text-xl">{activities[activeMonth].totalWorkDays} <span className="text-gray-400">{activities[activeMonth].totalUnknownDays > 0 ? `+ (${activities[activeMonth].totalUnknownDays})` : ""}</span></div>
-                </div>
-
             </div>
 
-            <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mt-5`}>
+            <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mt-5`}>
                 {activities[activeMonth].days.map((day, index) => {
                     const date = dayjs(day.date.date);
 
