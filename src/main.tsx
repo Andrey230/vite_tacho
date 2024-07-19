@@ -16,6 +16,7 @@ import SignUp, {loader as signupLoader} from "./pages/sign-up";
 import Create, {loader as driverCreateLoader} from "./pages/driver/create";
 import {AuthProvider} from "./providers/AuthProvider";
 import Statistics from "./pages/statistics/statistics";
+import Settings from "./pages/settings/settings";
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path: "/statistics",
                 element: <Statistics />
+            },
+            {
+                path: "/settings",
+                element: <Settings />
             },
             {
                 path: "/sign-up",

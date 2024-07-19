@@ -25,13 +25,13 @@ export default function DriverList({drivers}){
                 if(result){
                     addNotification({
                         type: NotificationTypes.SUCCESS,
-                        message: `${result.name} added successfully`
+                        message: `Dodano ${result.name}`
                     });
                 }
             }catch (error){
                 addNotification({
                     type: NotificationTypes.ERROR,
-                    message: 'Something went wrong =('
+                    message: 'Coś poszło nie tak...'
                 });
             }
 
@@ -44,7 +44,7 @@ export default function DriverList({drivers}){
         <>
 
             <div className="flex justify-start gap-5 items-center mb-4">
-                <p className="font-semibold text-2xl">Your drivers</p>
+                <p className="font-semibold text-2xl">Twoi kierowcy</p>
                 <label className="cursor-pointer">
                     <input type="file" className="hidden" onChange={onUploadDriver} />
                     <div className="btn btn-primary btn-circle">
@@ -59,8 +59,8 @@ export default function DriverList({drivers}){
                             {/* head */}
                             <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Car number</th>
+                                <th>Kierowca</th>
+                                <th>Numer samochodu</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -86,7 +86,7 @@ export default function DriverList({drivers}){
                                         </td>
                                         <th>
                                             <div className="flex gap-3">
-                                                <NavLink to={`/driver/`+driver.id} className="btn btn-primary btn-xs">statistics</NavLink>
+                                                <NavLink to={`/driver/`+driver.id} className="btn btn-primary btn-xs">statystyka</NavLink>
                                             </div>
                                         </th>
                                     </tr>

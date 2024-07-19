@@ -51,7 +51,7 @@ export default function View(){
 
     return (
         <>
-            <p className="text-2xl font-bold">Driver activities: {driver.name}</p>
+            <p className="text-2xl font-bold">{driver.name}</p>
 
             <select className="select w-full max-w-xs shadow mb-5 mt-5" onChange={changeActiveMonth}>
                 {months.map((month, index) => {
@@ -65,12 +65,12 @@ export default function View(){
                 <div className="stats stats-horizontal shadow">
 
                     <div className="stat">
-                        <div className="stat-title">Km per month</div>
+                        <div className="stat-title">Km</div>
                         <div className="stat-value text-xl">{activities[activeMonth].totalDistance}</div>
                     </div>
 
                     <div className="stat">
-                        <div className="stat-title">Km per day</div>
+                        <div className="stat-title">Średnia</div>
                         <div className="stat-value text-xl">{activities[activeMonth].additionalInformation.averageDistance.toFixed(2)}</div>
                     </div>
 
@@ -80,7 +80,7 @@ export default function View(){
                     {/*</div>*/}
 
                     <div className="stat">
-                        <div className="stat-title">Work days</div>
+                        <div className="stat-title">Dni robocze</div>
                         <div className="stat-value text-xl">{activities[activeMonth].additionalInformation.totalWorkDays} <span className="text-gray-400">{activities[activeMonth].additionalInformation.totalUnknownDays > 0 ? `+ (${activities[activeMonth].additionalInformation.totalUnknownDays})` : ""}</span></div>
                     </div>
 

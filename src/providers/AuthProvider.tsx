@@ -114,6 +114,27 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const updateOptions = async (options) => {
+        try {
+            const response = await fetch(baseUrl + `/api/user/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': "Bearer " + token
+                },
+                body: JSON.stringify(options)
+            });
+
+            if(!response.ok){
+                throw new Error('updateUser failed');
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
+    }
+
     const getActivitiesByMonth = async (month) => {
         try {
             const response = await fetch(baseUrl + "/api/users/month/" + month, {
@@ -163,7 +184,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth }}>
+        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth, updateOptions }}>
             {children}
         </AuthContext.Provider>
     );

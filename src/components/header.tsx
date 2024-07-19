@@ -35,21 +35,24 @@ export default function Header(){
                         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                             {user ? <>
                                     <li>
-                                        <Link to="/" onClick={closeDropdown}>Profile</Link>
+                                        <Link to="/" onClick={closeDropdown}>Profil</Link>
                                     </li>
                                     <li>
-                                        <Link to="/statistics" onClick={closeDropdown}>Statistics</Link>
+                                        <Link to="/statistics" onClick={closeDropdown}>Statystyka</Link>
                                     </li>
                                     <li>
-                                        <a onClick={onLogout}>Logout</a>
+                                        <Link to="/settings" onClick={closeDropdown}>Ustawenia</Link>
+                                    </li>
+                                    <li>
+                                        <a onClick={onLogout}>Wyloguj się</a>
                                     </li>
                                 </> :
                                 <>
                                     <li>
-                                        <Link to="/sign-up" onClick={closeDropdown}>Create account</Link>
+                                        <Link to="/sign-up" onClick={closeDropdown}>Utwórz profil</Link>
                                     </li>
                                     <li>
-                                        <Link to="/login" onClick={closeDropdown}>Login</Link>
+                                        <Link to="/login" onClick={closeDropdown}>Zaloguj się</Link>
                                     </li>
                                 </>
                             }

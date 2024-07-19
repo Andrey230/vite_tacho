@@ -81,7 +81,7 @@ export default function RankingList(){
                                         </td>
                                         <th>
                                             <div className="flex gap-3">
-                                                <NavLink to={`/driver/`+driver.driver.id} className="btn btn-primary btn-xs">statistics</NavLink>
+                                                <NavLink to={`/driver/`+driver.driver.id} className="btn btn-primary btn-xs">statystyka</NavLink>
                                             </div>
                                         </th>
                                     </tr>
