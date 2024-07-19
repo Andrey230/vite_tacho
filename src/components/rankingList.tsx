@@ -42,13 +42,11 @@ export default function RankingList(){
                             {/* head */}
                             <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Total distance</th>
-                                <th>Average distance</th>
-                                <th>Points</th>
-                                <th>Work days</th>
-                                <th>8+</th>
-                                <th>9+</th>
+                                <th>Kierowca</th>
+                                <th>Dni robocze</th>
+                                <th>Km</th>
+                                <th>Ocena</th>
+                                <th>Premia</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -70,22 +68,16 @@ export default function RankingList(){
                                             </div>
                                         </td>
                                         <td>
+                                            <span className="font-bold">{driver.additionalInformation.totalWorkDays}</span>
+                                        </td>
+                                        <td>
                                             <span className="font-bold">{driver.totalDistance}</span>
                                         </td>
                                         <td>
-                                            <span className="font-bold">{driver.averageDistance}</span>
+                                            <span className="font-bold">{driver.additionalInformation.coefficient}%</span>
                                         </td>
                                         <td>
-                                            <span className="font-bold">{driver.totalPoints}</span>
-                                        </td>
-                                        <td>
-                                            <span className="font-bold">{driver.totalWorkDays}</span>
-                                        </td>
-                                        <td>
-                                            <span className="font-bold">{driver.countEight}</span>
-                                        </td>
-                                        <td>
-                                            <span className="font-bold">{driver.countNine}</span>
+                                            <span className="font-bold">{driver.additionalInformation.bonus}</span>
                                         </td>
                                         <th>
                                             <div className="flex gap-3">
@@ -97,13 +89,6 @@ export default function RankingList(){
                             }) }
                             </tbody>
                             <tfoot>
-                            {/*<tr>*/}
-                            {/*    <th></th>*/}
-                            {/*    <th>Name</th>*/}
-                            {/*    <th>Job</th>*/}
-                            {/*    <th>Favorite Color</th>*/}
-                            {/*    <th></th>*/}
-                            {/*</tr>*/}
                             </tfoot>
 
                         </table>

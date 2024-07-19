@@ -71,21 +71,45 @@ export default function View(){
 
                     <div className="stat">
                         <div className="stat-title">Km per day</div>
-                        <div className="stat-value text-xl">{activities[activeMonth].averageDistance.toFixed(2)}</div>
+                        <div className="stat-value text-xl">{activities[activeMonth].additionalInformation.averageDistance.toFixed(2)}</div>
                     </div>
 
-                    <div className="stat">
-                        <div className="stat-title">Points</div>
-                        <div className="stat-value text-xl">{activities[activeMonth].totalPoints}</div>
-                    </div>
+                    {/*<div className="stat">*/}
+                    {/*    <div className="stat-title">Premia</div>*/}
+                    {/*    <div className="stat-value text-xl">{activities[activeMonth].additionalInformation.bonus}</div>*/}
+                    {/*</div>*/}
 
                     <div className="stat">
                         <div className="stat-title">Work days</div>
-                        <div className="stat-value text-xl">{activities[activeMonth].totalWorkDays} <span className="text-gray-400">{activities[activeMonth].totalUnknownDays > 0 ? `+ (${activities[activeMonth].totalUnknownDays})` : ""}</span></div>
+                        <div className="stat-value text-xl">{activities[activeMonth].additionalInformation.totalWorkDays} <span className="text-gray-400">{activities[activeMonth].additionalInformation.totalUnknownDays > 0 ? `+ (${activities[activeMonth].additionalInformation.totalUnknownDays})` : ""}</span></div>
                     </div>
 
                 </div>
             </div>
+
+            {/*<div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mt-5`}>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Понедельник*/}
+            {/*    </div>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Вторник*/}
+            {/*    </div>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Среда*/}
+            {/*    </div>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Четверг*/}
+            {/*    </div>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Пятница*/}
+            {/*    </div>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Суббота*/}
+            {/*    </div>*/}
+            {/*    <div className="relative p-5 rounded-2xl shadow text-center bg-base-200">*/}
+            {/*        Воскресенье*/}
+            {/*    </div>*/}
+            {/*</div>*/}
 
             <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-5 mt-5`}>
                 {activities[activeMonth].days.map((day, index) => {
@@ -138,7 +162,7 @@ export default function View(){
                                                 {convertMinutesToTime(day.activities.REST)}
                                             </div>
                                             <div className="flex gap-1 items-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 fill-warning" viewBox="0 0 512 512"><path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 fill-warning" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
                                                 {convertMinutesToTime(day.activities.AVAILABILITY)}
                                             </div>
                                         </div>
@@ -160,7 +184,7 @@ export default function View(){
                                                         break;
                                                     case "AVAILABILITY":
                                                         color = 'step-warning';
-                                                        icon = <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 fill-warning" viewBox="0 0 512 512"><path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>;
+                                                        icon = <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 fill-warning" viewBox="0 0 512 512"><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>;
                                                         break;
                                                     case "INACTIVE":
                                                         color = 'step-base-300';
