@@ -155,6 +155,26 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const getDriverActivitiesByMonth = async (id, month) => {
+        try {
+            const response = await fetch(baseUrl + `/api/driver/${id}/${month}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': "Bearer " + token
+                }
+            });
+
+            if(!response.ok){
+                throw new Error('getDriverActivitiesByMonth failed');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const getUserInfo = async (token) => {
         try {
             const response = await fetch(baseUrl + "/api/user", {
@@ -184,7 +204,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth, updateOptions }}>
+        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth, updateOptions, getDriverActivitiesByMonth }}>
             {children}
         </AuthContext.Provider>
     );
