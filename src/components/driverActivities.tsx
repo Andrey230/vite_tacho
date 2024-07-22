@@ -117,6 +117,8 @@ export default function DriverActivities({activities}) {
                                                             break;
                                                     }
 
+                                                    return '';
+
                                                     return <li className="step">
                                                         <div className="flex gap-3 items-center">
                                                             {convertMinutesToTime(a.minutes)}
