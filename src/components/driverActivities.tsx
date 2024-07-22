@@ -120,7 +120,7 @@ export default function DriverActivities({activities}) {
                                                     return <li key={date.format("YYYYdm") + i} className="step">
                                                         <div className="flex gap-3 items-center">
                                                             {convertMinutesToTime(a.minutes)}
-                                                            {icon}
+                                                            {/*{icon}*/}
                                                             {convertMinutesToTime(a.end)}
                                                             <span className="text-base-content font-bold">({convertMinutesToTime(a.duration)})</span>
                                                         </div>
