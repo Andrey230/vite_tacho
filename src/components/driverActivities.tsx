@@ -117,15 +117,17 @@ export default function DriverActivities({activities}) {
                                                     //         break;
                                                     // }
 
-                                                    return <li className="step">
-                                                        <div className="flex gap-3 items-center">
-                                                            aa
-                                                            {/*{convertMinutesToTime(a.minutes)}*/}
-                                                            {/*{icon}*/}
-                                                            {/*{convertMinutesToTime(a.end)}*/}
-                                                            {/*<span className="text-base-content font-bold">({convertMinutesToTime(a.duration)})</span>*/}
-                                                        </div>
-                                                    </li>;
+                                                    return <li className="step"></li>;
+
+                                                    // return <li className="step">
+                                                    //     <div className="flex gap-3 items-center">
+                                                    //         aa
+                                                    //         {/*{convertMinutesToTime(a.minutes)}*/}
+                                                    //         {/*{icon}*/}
+                                                    //         {/*{convertMinutesToTime(a.end)}*/}
+                                                    //         {/*<span className="text-base-content font-bold">({convertMinutesToTime(a.duration)})</span>*/}
+                                                    //     </div>
+                                                    // </li>;
                                                 })}
                                             </ul>
                                         </div>
