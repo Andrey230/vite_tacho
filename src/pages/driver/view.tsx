@@ -37,8 +37,6 @@ export default function View(){
         activities[act.month] = act;
     });
 
-    console.log(activities);
-
 
     const months = Object.keys(activities);
 
