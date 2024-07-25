@@ -42,6 +42,7 @@ export default function RankingList(){
                             {/* head */}
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>Kierowca</th>
                                 <th>Dni robocze</th>
                                 <th>Km</th>
@@ -55,6 +56,7 @@ export default function RankingList(){
                             {activityDrivers.map((driver, index) => {
                                 return (
                                     <tr key={index}>
+                                        <td>{++index}</td>
                                         <td>
                                             <div className="flex items-center gap-3">
                                                 <div className="avatar">
