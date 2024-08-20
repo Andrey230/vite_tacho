@@ -17,6 +17,7 @@ import Create, {loader as driverCreateLoader} from "./pages/driver/create";
 import {AuthProvider} from "./providers/AuthProvider";
 import Statistics from "./pages/statistics/statistics";
 import Settings from "./pages/settings/settings";
+import { Analytics } from "@vercel/analytics/react"
 
 const router = createBrowserRouter([
     {
@@ -71,8 +72,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-      <AuthProvider>
-          <RouterProvider router={router} />
-      </AuthProvider>
+      <Analytics>
+          <AuthProvider>
+              <RouterProvider router={router} />
+          </AuthProvider>
+      </Analytics>
   </React.StrictMode>,
 )
