@@ -50,11 +50,11 @@ export default function Profile(){
                         <div className="stat-value text-secondary">{user.subscription.name}</div>
                     </div>
                     <div className="stat">
-                        <div className="stat-title">Początek pracy</div>
+                        <div className="stat-title">Początek pracy (UTC+0)</div>
                         <div className="stat-value">{convertMinutesToTime(user.options.full_day_start)}</div>
                     </div>
                     <div className="stat">
-                        <div className="stat-title">Koniec pracy</div>
+                        <div className="stat-title">Koniec pracy (UTC+0)</div>
                         <div className="stat-value">{convertMinutesToTime(user.options.full_day_end)}</div>
                     </div>
                 </div>
