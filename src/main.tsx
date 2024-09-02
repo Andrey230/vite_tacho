@@ -8,9 +8,9 @@ import {
     Navigate
 } from "react-router-dom"
 import Root from "./pages/root";
-import Home from "./pages/home";
 import Login, {loader as loginLoader} from "./pages/login";
 import Profile from "./pages/profile";
+import Home from "./pages/home/home";
 import View, {loader as driverLoader} from "./pages/driver/view";
 import SignUp, {loader as signupLoader} from "./pages/sign-up";
 import Create, {loader as driverCreateLoader} from "./pages/driver/create";
@@ -61,6 +61,10 @@ const router = createBrowserRouter([
                 element: <Create />,
                 loader: driverCreateLoader,
             },
+            // {
+            //     path: "/home",
+            //     element: <Home />,
+            // },
             {
                 path: "*",
                 element: <Navigate to={"/"} replace={true} />

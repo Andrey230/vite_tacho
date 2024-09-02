@@ -1,11 +1,13 @@
 import { NavLink, useLoaderData, redirect } from "react-router-dom";
 import React, {useState, useMemo, useEffect} from "react";
 import dayjs from 'dayjs';
+import locale_pl from 'dayjs/locale/pl';
 import {convertMinutesToTime} from "../../services/timeHelper";
 import {useAuth} from "../../providers/AuthProvider";
 import DriverActivities from "../../components/driverActivities";
 
 const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
+dayjs.locale(locale_pl);
 
 export async function loader({ params }) {
     let driver = {};
