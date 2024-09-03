@@ -2,11 +2,15 @@ import {useAuth} from "../providers/AuthProvider";
 import { NavLink } from "react-router-dom";
 import {useNotification} from "../pages/root";
 import {NotificationTypes} from "../constants/NotificationTypes";
+import {useState} from "react";
 
 export default function DriverList({drivers}){
 
     const {uploadDriver} = useAuth();
     const {addNotification} = useNotification();
+    const [searchValue, setSearchValue] = useState('');
+    const [filteredDrivers, setDrivers] = useState(drivers);
+
 
     const onUploadDriver = async (e) => {
         const file = e.target.files[0];
@@ -40,6 +44,18 @@ export default function DriverList({drivers}){
         reader.readAsDataURL(file);
     }
 
+    const findDrivers = (event) => {
+        const value = event.target.value.toLowerCase().replace(/\s+/g, "");
+        setSearchValue(value);
+
+        const newDrivers = drivers.filter(driver =>
+            driver.name.toLowerCase().replace(/\s+/g, "").includes(value) ||
+            driver.carNumber.toLowerCase().replace(/\s+/g, "").includes(value)
+        );
+
+        setDrivers(newDrivers);
+    }
+
     return (
         <>
 
@@ -52,10 +68,25 @@ export default function DriverList({drivers}){
                     </div>
                 </label>
             </div>
-            {drivers.length > 0 ?  <>
+
+            <label className="input input-bordered flex items-center gap-2 w-64 shadow mb-5">
+                <input type="text" className="grow" placeholder="Znajdź kierowcę" value={searchValue} onChange={findDrivers} />
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70">
+                    <path
+                        fillRule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clipRule="evenodd" />
+                </svg>
+            </label>
+
+            {filteredDrivers.length > 0 ?  <>
                 <div className="bg-base-100 shadow rounded-2xl p-5 mt-2">
                     <div className="overflow-x-auto">
-                        {drivers.length > 0 ? <table className="table">
+                        <table className="table">
                             {/* head */}
                             <thead>
                             <tr>
@@ -66,7 +97,7 @@ export default function DriverList({drivers}){
                             </thead>
                             <tbody>
 
-                            {drivers.map((driver, index) => {
+                            {filteredDrivers.map((driver, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>
@@ -103,7 +134,7 @@ export default function DriverList({drivers}){
                             {/*</tr>*/}
                             </tfoot>
 
-                        </table> : ""}
+                        </table>
                     </div>
                 </div>
             </>: <p className="text-xl font-bold mt-5">You don't have drivers yet</p>}
