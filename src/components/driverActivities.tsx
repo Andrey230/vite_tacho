@@ -98,7 +98,7 @@ export default function DriverActivities({activities}) {
                             <dialog id={`day_modal_${activities.month + index}`} className="modal bg-base-primary" open>
                                 <div className="modal-box">
                                     <Suspense fallback={<div>Loading...</div>}>
-                                        <LazyModalContent day={day} />
+                                        <LazyModalContent day={day} setOpenModal={setOpenModal}/>
                                     </Suspense>
                                 </div>
                                 <form method="dialog" className="modal-backdrop">
