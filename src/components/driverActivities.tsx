@@ -11,11 +11,14 @@ export default function DriverActivities({activities}) {
     }
 
     const handleOpenModal = (index) => {
-        setOpenModal(index);
+        if(!openModal){
+            setOpenModal(index);
+        }
     };
 
     const handleCloseModal = () => {
         setOpenModal(null);
+        console.log('close');
     };
 
     return (
@@ -81,7 +84,7 @@ export default function DriverActivities({activities}) {
                     }
 
 
-                    return <div key={day.date + index} className={`relative p-10 rounded-2xl shadow text-center ${bgDay}`}>
+                    return <div key={day.date + index} className={`cursor-pointer relative p-10 rounded-2xl shadow text-center ${bgDay}`} onClick={() => handleOpenModal(index)}>
 
 
                         <div className="top-3 right-3 absolute">
@@ -91,24 +94,18 @@ export default function DriverActivities({activities}) {
                             </div>
                         </div>
 
-                        {workDay ?
-                            <div>
-                                <div className="absolute top-3 left-3">
-                                    <svg onClick={() => handleOpenModal(index)} xmlns="http://www.w3.org/2000/svg" className={`w-5 h-5 ${infoColor}`} viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
+                        {openModal === index && (
+                            <dialog id={`day_modal_${activities.month + index}`} className="modal bg-base-primary" open>
+                                <div className="modal-box">
+                                    <Suspense fallback={<div>Loading...</div>}>
+                                        <LazyModalContent day={day} />
+                                    </Suspense>
                                 </div>
-                                {openModal === index && (
-                                    <dialog id={`day_modal_${activities.month + index}`} className="modal bg-base-primary" open>
-                                        <div className="modal-box">
-                                            <Suspense fallback={<div>Loading...</div>}>
-                                                <LazyModalContent day={day} />
-                                            </Suspense>
-                                        </div>
-                                        <form method="dialog" className="modal-backdrop">
-                                            <button onClick={handleCloseModal}>close</button>
-                                        </form>
-                                    </dialog>
-                                )}
-                            </div> : ""}
+                                <form method="dialog" className="modal-backdrop">
+                                    <button onClick={handleCloseModal}>close</button>
+                                </form>
+                            </dialog>
+                        )}
 
                         <p className="mb-1">{date.format("D MMMM")}</p>
                         <p className="font-semibold">{day.distance} km</p>
