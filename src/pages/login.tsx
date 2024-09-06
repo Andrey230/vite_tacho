@@ -16,6 +16,7 @@ export default function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const {login} = useAuth();
@@ -30,6 +31,7 @@ export default function Login(){
 
     const onSubmitForm = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             await login({
@@ -41,6 +43,7 @@ export default function Login(){
         }catch (error){
             console.log(error);
             setError(true);
+            setLoading(false);
         }
     }
 
@@ -62,7 +65,14 @@ export default function Login(){
                                 <input type="password" className="grow" value={password} placeholder="*********" onChange={onPasswordChange} />
                             </label>
                             <p className="text-primary text-sm mt-2">Zapomniałeś/aś hasła?</p>
-                            <button className="btn btn-primary mt-5">Zaloguj się</button>
+
+                            <div className="mt-4 flex">
+                                {loading ? <button className="btn btn-primary" disabled>
+                                    <span className="loading loading-spinner loading-xs"></span>
+                                    Processing...
+                                </button> : <button className="btn btn-primary">Zaloguj się</button> }
+                            </div>
+
                             {error ? <p className="text-error text-sm mt-2">Coś poszło nie tak</p> : ""}
                             <NavLink to="/sign-up" className="block text-sm text-primary mt-3 text-right">Utwórz nowe konto</NavLink>
                         </form>
