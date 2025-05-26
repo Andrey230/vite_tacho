@@ -7,6 +7,7 @@ const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
 
 const AuthContext = createContext({});
 
+
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
