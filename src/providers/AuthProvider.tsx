@@ -1,7 +1,4 @@
 import {createContext, useContext, useEffect, useState} from "react";
-import { redirect } from "react-router-dom";
-import {useNotification} from "../pages/root";
-import {NotificationTypes} from "../constants/NotificationTypes";
 
 const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
 
@@ -66,6 +63,48 @@ export const AuthProvider = ({ children }) => {
             await login(credentials);
             return true;
         } catch (error) {
+            throw error;
+        }
+    }
+
+    const resetPassword = async (credentials) => {
+        try {
+            const response = await fetch(baseUrl + "/api/reset-password", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
+
+            if(!response.ok){
+                throw new Error('Reset password failed');
+            }
+
+            return await response.json();
+
+        }catch (error) {
+            throw error;
+        }
+    }
+
+    const recoveryPassword = async (credentials) => {
+        try {
+            const response = await fetch(baseUrl + "/api/reset-password/confirm", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
+
+            if(!response.ok){
+                throw new Error('Reset password failed');
+            }
+
+            return await response.json();
+
+        }catch (error) {
             throw error;
         }
     }
@@ -205,7 +244,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth, updateOptions, getDriverActivitiesByMonth }}>
+        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth, updateOptions, getDriverActivitiesByMonth, resetPassword, recoveryPassword }}>
             {children}
         </AuthContext.Provider>
     );

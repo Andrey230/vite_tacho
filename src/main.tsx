@@ -18,6 +18,8 @@ import {AuthProvider} from "./providers/AuthProvider";
 import Statistics from "./pages/statistics/statistics";
 import Settings from "./pages/settings/settings";
 import { Analytics } from "@vercel/analytics/react"
+import ForgotPassword from "./pages/forgot-password.tsx";
+import RecoveryPassword, {loader as recoveryPasswordLoader} from "./pages/recovery-password.tsx";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +40,15 @@ const router = createBrowserRouter([
                 path: "/login",
                 element: <Login />,
                 loader: loginLoader
+            },
+            {
+                path: "/forgot-password",
+                element: <ForgotPassword />
+            },
+            {
+                path: "/recovery-password/:token",
+                element: <RecoveryPassword />,
+                loader: recoveryPasswordLoader,
             },
             // {
             //     path: "/profile",
