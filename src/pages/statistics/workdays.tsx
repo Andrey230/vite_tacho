@@ -107,8 +107,8 @@ export default function Workdays() {
 
     return (
         <>
-            <div className="flex justify-between items-center">
-                <div className="flex gap-5 items-center">
+            <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
+                <div className="flex flex-col gap-3 md:flex-row md:gap-5 md:items-center">
                     <fieldset className="fieldset">
                         <input
                             type="month"
@@ -142,7 +142,67 @@ export default function Workdays() {
                 </div>
             </div>
 
-            <div className="overflow-x-auto bg-base-100 shadow rounded-2xl p-5 mt-5">
+            {/* MOBILE CARDS */}
+            <div className="block md:hidden space-y-4 mt-5">
+                {Object.entries(items).map(([month, item]) => {
+                    const date = new Date(`${month}-01`);
+
+                    const formattedMonth = new Intl.DateTimeFormat(
+                        "pl-PL",
+                        { month: "long", year: "2-digit" }
+                    )
+                        .format(date)
+                        .replace(/^./, c => c.toUpperCase());
+
+                    const total = item.work + item.dayOff;
+                    const percent = total ? Math.round((item.work / total) * 100) : 0;
+
+                    let progressClass = "progress-error";
+                    if (percent >= 70) progressClass = "progress-success";
+                    else if (percent >= 40) progressClass = "progress-warning";
+
+                    return (
+                        <div key={month} className="card bg-base-100 shadow">
+                            <div className="card-body gap-3">
+                                <h2 className="card-title text-lg">
+                                    {formattedMonth}
+                                </h2>
+
+                                <div className="flex justify-between items-center">
+                        <span className="text-sm opacity-70">
+                            Dni robocze
+                        </span>
+                                    <span className="text-success font-semibold">
+                            {item.work}
+                        </span>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                        <span className="text-sm opacity-70">
+                            Reszta
+                        </span>
+                                    <span className="text-error font-semibold">
+                            {item.dayOff}
+                        </span>
+                                </div>
+
+                                <progress
+                                    className={`progress ${progressClass} w-full`}
+                                    value={item.work}
+                                    max={total}
+                                />
+
+                                <div className="text-right text-xs opacity-60">
+                                    {percent}% dni roboczych
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* DESKTOP TABLE */}
+            <div className="hidden md:block overflow-x-auto bg-base-100 shadow rounded-2xl p-5 mt-5">
                 <table className="table text-2xl">
                     <thead>
                     <tr>
@@ -158,13 +218,10 @@ export default function Workdays() {
 
                         const formattedMonth = new Intl.DateTimeFormat(
                             "pl-PL",
-                            {
-                                month: "long",
-                                year: "2-digit",
-                            }
+                            { month: "long", year: "2-digit" }
                         )
                             .format(date)
-                            .replace(/^./, (c) => c.toUpperCase());
+                            .replace(/^./, c => c.toUpperCase());
 
                         return (
                             <tr key={month}>
