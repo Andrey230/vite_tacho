@@ -117,12 +117,15 @@ export default function DriverList({drivers}){
                                         </td>
                                         <th>
                                             <div className="flex gap-3">
-                                                <NavLink to={`/driver/`+driver.id} className="btn btn-primary btn-xs">statystyka</NavLink>
+                                                <NavLink to={`/driver/` + driver.id}
+                                                         className="btn btn-primary btn-xs">aktywność</NavLink>
+                                                <NavLink to={`/driver/statistics/` + driver.id}
+                                                         className="btn btn-primary btn-xs">statystyka</NavLink>
                                             </div>
                                         </th>
                                     </tr>
                                 );
-                            }) }
+                            })}
                             </tbody>
                             <tfoot>
                             {/*<tr>*/}

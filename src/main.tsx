@@ -20,6 +20,7 @@ import Settings from "./pages/settings/settings";
 import { Analytics } from "@vercel/analytics/react"
 import ForgotPassword from "./pages/forgot-password.tsx";
 import RecoveryPassword, {loader as recoveryPasswordLoader} from "./pages/recovery-password.tsx";
+import Workdays, {loader as workDaysLoader} from "./pages/statistics/workdays.tsx";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,11 @@ const router = createBrowserRouter([
                 path: "/driver/:driver_id",
                 element: <View />,
                 loader: driverLoader,
+            },
+            {
+                path: "/driver/statistics/:driver_id",
+                element: <Workdays />,
+                loader: workDaysLoader,
             },
             {
                 path: "/login",
