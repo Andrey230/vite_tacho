@@ -1,5 +1,7 @@
 import { NavLink, redirect, useLoaderData } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PdfDocument from "../pdf/pdfDocument.tsx";
 
 const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
 
@@ -107,6 +109,21 @@ export default function Workdays() {
 
     return (
         <>
+            <div className="flex items-center gap-5">
+                <h1 className="text-3xl">{data.driver.name}</h1>
+
+                <PDFDownloadLink
+                    document={
+                        <PdfDocument
+                            items={items}
+                        />
+                    }
+                    fileName={`statystyki_${data.driver.name.replace(/\s+/g, '_')}_${from}_${to}.pdf`}
+                    className="btn btn-primary btn-sm md:btn-md"
+                >
+                    PDF
+                </PDFDownloadLink>
+            </div>
             <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
                 <div className="flex flex-col gap-3 md:flex-row md:gap-5 md:items-center">
                     <fieldset className="fieldset">
@@ -149,7 +166,7 @@ export default function Workdays() {
 
                     const formattedMonth = new Intl.DateTimeFormat(
                         "pl-PL",
-                        { month: "long", year: "2-digit" }
+                        {month: "long", year: "2-digit"}
                     )
                         .format(date)
                         .replace(/^./, c => c.toUpperCase());
@@ -207,6 +224,7 @@ export default function Workdays() {
                     <thead>
                     <tr>
                         <th>Miesiąc</th>
+                        <th>Przebieg</th>
                         <th>Dni robocze</th>
                         <th>Reszta</th>
                         <th>Progres</th>
@@ -218,7 +236,7 @@ export default function Workdays() {
 
                         const formattedMonth = new Intl.DateTimeFormat(
                             "pl-PL",
-                            { month: "long", year: "2-digit" }
+                            {month: "long", year: "2-digit"}
                         )
                             .format(date)
                             .replace(/^./, c => c.toUpperCase());
@@ -227,6 +245,9 @@ export default function Workdays() {
                             <tr key={month}>
                                 <td className="italic">
                                     {formattedMonth}
+                                </td>
+                                <td>
+                                    {item.totalDistance} km
                                 </td>
                                 <td className="text-success">
                                     {item.work}
