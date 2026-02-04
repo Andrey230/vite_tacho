@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
 });
 
 /* ===== Component ===== */
-const PdfDocument = ({ items }) => {
+const RankingPdf = ({ items, month }) => {
 
     const formatMonth = (monthStr) => {
         try {
@@ -166,62 +166,39 @@ const PdfDocument = ({ items }) => {
         <Document>
             <Page size="A4" style={styles.page}>
                 {/* Header */}
-                <Text style={styles.header}>STATYSTYKI</Text>
+                <Text style={styles.header}>STATYSTYKI {month}</Text>
                 <View style={styles.headerDivider} />
 
                 {/* Table */}
                 <View style={styles.tableWrapper}>
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
-                            <Text style={[styles.tableHeader, { width: '25%' }]}>Miesiąc</Text>
-                            <Text style={[styles.tableHeader, { width: '25%' }]}>Przebieg</Text>
-                            <Text style={[styles.tableHeader, { width: '25%' }]}>Dni robocze</Text>
-                            <Text style={[styles.tableHeader, { width: '25%' }]}>Reszta</Text>
+                            <Text style={[styles.tableHeader, { width: '33.3%' }]}>Kierowca</Text>
+                            <Text style={[styles.tableHeader, { width: '33.3%' }]}>Przebieg</Text>
+                            <Text style={[styles.tableHeader, { width: '33.3%' }]}>Dni robocze</Text>
                         </View>
 
-                        {Object.entries(items).map(([month, item], index) => (
-                            <View
-                                key={month}
+                        {items.map((item, index) => {
+                            return <View
+                                key={index}
                                 style={[
                                     styles.tableRow,
                                     index % 2 === 0 ? styles.rowEven : styles.rowOdd
                                 ]}
                             >
-                                <Text style={[styles.monthCell, { width: '25%' }]}>
-                                    {formatMonth(month)}
+                                <Text style={[styles.monthCell, { width: '33.3%' }]}>
+                                    {item.driver.name}
                                 </Text>
 
-                                <Text style={[styles.tableCell, { width: '25%' }]}>
+                                <Text style={[styles.tableCell, { width: '33.3%' }]}>
                                     {item.totalDistance || 0} km
                                 </Text>
 
-                                <Text style={[styles.tableCell, styles.workGreen, { width: '25%' }]}>
-                                    {item.work || 0}
-                                </Text>
-
-                                <Text style={[styles.tableCell, styles.offRed, { width: '25%' }]}>
-                                    {item.dayOff || 0}
+                                <Text style={[styles.tableCell, styles.workGreen, { width: '33.3%' }]}>
+                                    {item.additionalInformation.totalWorkDays}
                                 </Text>
                             </View>
-                        ))}
-                    </View>
-                </View>
-
-                {/* Summary */}
-                <View style={styles.summaryBox}>
-                    <View style={styles.summaryRow}>
-                        <Text style={styles.summaryLabel}>Łączna liczba dni roboczych</Text>
-                        <Text style={styles.summaryValue}>{totalWork}</Text>
-                    </View>
-
-                    <View style={styles.summaryRow}>
-                        <Text style={styles.summaryLabel}>Łączny przebieg</Text>
-                        <Text style={styles.summaryValue}>{totalDistance} km</Text>
-                    </View>
-
-                    <View style={styles.summaryRow}>
-                        <Text style={styles.summaryLabel}>Łączna liczba dni wolnych</Text>
-                        <Text style={styles.summaryValue}>{totalDaysOff}</Text>
+                        })}
                     </View>
                 </View>
             </Page>
@@ -229,4 +206,4 @@ const PdfDocument = ({ items }) => {
     );
 };
 
-export default PdfDocument;
+export default RankingPdf;

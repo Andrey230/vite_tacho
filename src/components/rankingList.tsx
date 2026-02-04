@@ -2,6 +2,9 @@ import {useEffect, useState} from "react";
 import dayjs from 'dayjs';
 import { NavLink } from "react-router-dom";
 import {useAuth} from "../providers/AuthProvider";
+import PdfDocument from "../pages/pdf/pdfDocument.tsx";
+import {PDFDownloadLink} from "@react-pdf/renderer";
+import RankingPdf from "../pages/pdf/rankingPdf.tsx";
 
 export default function RankingList(){
     const current = dayjs();
@@ -30,11 +33,26 @@ export default function RankingList(){
 
     return (
         <>
-            <select className="select w-full max-w-xs shadow" onChange={onMonthChange}>
-                {months.map((month, index) => {
-                    return <option key={index} value={month}>{month}</option>
-                })}
-            </select>
+            <div className="flex items-center gap-5">
+                <select className="select w-full max-w-xs shadow" onChange={onMonthChange}>
+                    {months.map((month, index) => {
+                        return <option key={index} value={month}>{month}</option>
+                    })}
+                </select>
+
+                <PDFDownloadLink
+                    document={
+                        <RankingPdf
+                            items={activityDrivers}
+                            month={currentMonth}
+                        />
+                    }
+                    fileName={`statystyki_${currentMonth}.pdf`}
+                    className="btn btn-primary btn-sm md:btn-md"
+                >
+                    PDF
+                </PDFDownloadLink>
+            </div>
 
             {activityDrivers.length > 0 ? <div className="bg-base-100 shadow rounded-2xl p-5 mt-5">
                     <div className="overflow-x-auto">
@@ -46,8 +64,6 @@ export default function RankingList(){
                                 <th>Kierowca</th>
                                 <th>Dni robocze</th>
                                 <th>Km</th>
-                                <th>Ocena</th>
-                                <th>Premia</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -74,12 +90,6 @@ export default function RankingList(){
                                         </td>
                                         <td>
                                             <span className="font-bold">{driver.totalDistance}</span>
-                                        </td>
-                                        <td>
-                                            <span className="font-bold">{driver.additionalInformation.coefficient}%</span>
-                                        </td>
-                                        <td>
-                                            <span className="font-bold">{driver.additionalInformation.bonus}</span>
                                         </td>
                                         <th>
                                             <div className="flex gap-3">

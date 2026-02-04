@@ -184,6 +184,14 @@ export default function Workdays() {
                                 <h2 className="card-title text-lg">
                                     {formattedMonth}
                                 </h2>
+                                <div className="flex justify-between items-center">
+                        <span className="text-sm opacity-70">
+                            Przebieg
+                        </span>
+                                    <span className="text font-semibold">
+                            {item.totalDistance} km
+                        </span>
+                                </div>
 
                                 <div className="flex justify-between items-center">
                         <span className="text-sm opacity-70">
