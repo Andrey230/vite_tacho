@@ -1,7 +1,9 @@
 const drivers = [
     { name: "Michał Kowalczyk", km: 18454 },
     { name: "Paweł Dąbrowski", km: 12906 },
-    { name: "Tomasz Zieliński", km: 717 },
+    { name: "Tomasz Zieliński", km: 1137 },
+    { name: "Krzysztof Nowak", km: 943 },
+    { name: "Piotr Wiśniewski", km: 717 },
 ];
 
 export function DemoRanking() {
