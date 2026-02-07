@@ -21,6 +21,7 @@ import { Analytics } from "@vercel/analytics/react"
 import ForgotPassword from "./pages/forgot-password.tsx";
 import RecoveryPassword, {loader as recoveryPasswordLoader} from "./pages/recovery-password.tsx";
 import Workdays, {loader as workDaysLoader} from "./pages/statistics/workdays.tsx";
+import Landing from "./pages/landing/landing.tsx";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Profile />,
+                //loader: homeLoader,
+            },
+            {
+                path: "/landing",
+                element: <Landing />,
                 //loader: homeLoader,
             },
             {
