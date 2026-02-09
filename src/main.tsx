@@ -22,6 +22,7 @@ import ForgotPassword from "./pages/forgot-password.tsx";
 import RecoveryPassword, {loader as recoveryPasswordLoader} from "./pages/recovery-password.tsx";
 import Workdays, {loader as workDaysLoader} from "./pages/statistics/workdays.tsx";
 import Landing from "./pages/landing/landing.tsx";
+import Rules from "./pages/rules/rules.tsx";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
             {
                 path: "/landing",
                 element: <Landing />,
+                //loader: homeLoader,
+            },
+            {
+                path: "/regulamin",
+                element: <Rules />,
                 //loader: homeLoader,
             },
             {
