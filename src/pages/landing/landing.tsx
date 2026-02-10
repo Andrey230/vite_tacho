@@ -4,6 +4,7 @@ import LiveDemo from "./components/liveDemo.tsx";
 import WhoIsItFor from "./components/whoIsItFor.tsx";
 import CTA from "./components/cta.tsx";
 import FleetStatistics from "./components/fleetStatistics.tsx";
+import Contact from "./components/contact.tsx";
 
 export default function Landing(){
     return (
@@ -14,6 +15,7 @@ export default function Landing(){
             <FleetStatistics />
             <WhoIsItFor />
             <CTA />
+            <Contact />
         </>
     );
 }
