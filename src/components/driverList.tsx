@@ -1,12 +1,9 @@
 import { useAuth } from "../providers/AuthProvider";
 import { NavLink } from "react-router-dom";
-import { useNotification } from "../pages/root";
-import { NotificationTypes } from "../constants/NotificationTypes";
 import { useState, useEffect } from "react";
 
 export default function DriverList({ drivers }) {
     const { uploadDriver } = useAuth();
-    const { addNotification } = useNotification();
 
     const [searchValue, setSearchValue] = useState("");
     const [filteredDrivers, setFilteredDrivers] = useState([]);
