@@ -17,9 +17,11 @@ export default function Profile() {
 
     return (
         <>
-            <p className="text-2xl font-bold">Witam, {user.name}</p>
-            <div className="mt-8">
-                <DriverList drivers={user.drivers} />
+            <div className="max-w-6xl mx-auto">
+                <p className="text-2xl font-bold">Witam, {user.name}</p>
+                <div className="mt-8">
+                    <DriverList drivers={user.drivers}/>
+                </div>
             </div>
         </>
     );
