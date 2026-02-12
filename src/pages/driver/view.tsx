@@ -1,42 +1,37 @@
-import { NavLink, useLoaderData, redirect } from "react-router-dom";
-import React, {useState, useMemo, useEffect} from "react";
-import dayjs from 'dayjs';
-import locale_pl from 'dayjs/locale/pl';
-import {convertMinutesToTime} from "../../services/timeHelper";
-import {useAuth} from "../../providers/AuthProvider";
+import { useLoaderData, redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import dayjs from "dayjs";
+import locale_pl from "dayjs/locale/pl";
+import { useAuth } from "../../providers/AuthProvider";
 import DriverActivities from "../../components/driverActivities";
 
 const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
 dayjs.locale(locale_pl);
 
 export async function loader({ params }) {
-    let driver = {};
-
     try {
-        const response = await fetch(baseUrl + "/api/driver/"+params.driver_id, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': "Bearer " + localStorage.getItem('token')
+        const response = await fetch(
+            baseUrl + "/api/driver/" + params.driver_id,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                },
             }
-        });
+        );
 
-        if(!response.ok){
-            throw new Error('User info failed');
-        }
+        if (!response.ok) throw new Error();
 
-        driver = await response.json();
-
-    } catch (error) {
-        return redirect('/');
+        const driver = await response.json();
+        return { driver };
+    } catch {
+        return redirect("/");
     }
-
-    return {driver};
 }
 
-export default function View(){
+export default function View() {
     const { driver } = useLoaderData();
-    const {getDriverActivitiesByMonth} = useAuth();
+    const { getDriverActivitiesByMonth } = useAuth();
 
     const months = driver.months;
 
@@ -45,12 +40,11 @@ export default function View(){
 
     useEffect(() => {
         const fetchActivities = async () => {
-            try {
-                const activitiesData = await getDriverActivitiesByMonth(driver.id, activeMonth);
-                setActivities(activitiesData);
-            } catch (error) {
-                console.error("Error fetching activities:", error);
-            }
+            const data = await getDriverActivitiesByMonth(
+                driver.id,
+                activeMonth
+            );
+            setActivities(data);
         };
 
         fetchActivities();
@@ -60,13 +54,17 @@ export default function View(){
         setActiveMonth(e.target.value);
     }
 
-
     return (
         <>
-            <p className="text-2xl font-bold">{driver.name}</p>
+            <h1 className="text-3xl font-bold">{driver.name}</h1>
 
+            <p className="text-base-content/60 mt-3 max-w-2xl">
+                Miesięczny przegląd aktywności kierowcy na podstawie danych z tachografu.
+            </p>
+
+            {/* MONTH SELECT + LABEL */}
             <select
-                className="select w-full max-w-xs shadow mb-5 mt-5"
+                className="select select-bordered w-56 focus:outline-none focus:ring-2 focus:ring-primary mt-4"
                 onChange={changeActiveMonth}
                 value={activeMonth}
             >
@@ -77,11 +75,12 @@ export default function View(){
                 ))}
             </select>
 
-            <br />
-            <DriverActivities activities={activities}/>
-
-
+            <DriverActivities
+                activities={activities}
+                months={months}
+                activeMonth={activeMonth}
+                setActiveMonth={setActiveMonth}
+            />
         </>
     );
-
 }
