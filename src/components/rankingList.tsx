@@ -1,36 +1,78 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import RankingPdf from "../pages/pdf/rankingPdf.tsx";
 
+interface ActivityDriver {
+    driver: {
+        id: number;
+        name: string;
+    };
+    totalDistance: number;
+    additionalInformation: {
+        totalWorkDays: number;
+    };
+}
+
 export default function RankingList() {
+
+    const { authFetch } = useAuth();
+
     const current = dayjs();
     const previousMonth = current.subtract(1, "month");
 
-    const { getActivitiesByMonth } = useAuth();
-
-    const [activityDrivers, setActivityDrivers] = useState([]);
-    const [currentMonth, setCurrentMonth] = useState(
+    const [activityDrivers, setActivityDrivers] = useState<ActivityDriver[]>([]);
+    const [currentMonth, setCurrentMonth] = useState<string>(
         previousMonth.format("YYYY-MM")
     );
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const months = useMemo(() => {
+        const numPreviousMonths = 20;
+        const arr: string[] = [];
+
+        for (let i = 0; i < numPreviousMonths; i++) {
+            arr.push(
+                current.subtract(i, "month").format("YYYY-MM")
+            );
+        }
+
+        return arr;
+    }, [current]);
 
     useEffect(() => {
-        getActivitiesByMonth(currentMonth).then((data) =>
-            setActivityDrivers(data)
-        );
-    }, [currentMonth]);
 
-    const numPreviousMonths = 20;
-    let months = [];
+        const fetchData = async () => {
+            setLoading(true);
 
-    for (let i = 1; i <= numPreviousMonths; i++) {
-        const prevMonth = current.subtract(i, "month");
-        months.push(prevMonth.format("YYYY-MM"));
-    }
+            try {
+                const response = await authFetch(
+                    `/api/users/month/${currentMonth}`
+                );
 
-    const onMonthChange = (e) => {
+                if (!response.ok) {
+                    throw new Error();
+                }
+
+                const data: ActivityDriver[] = await response.json();
+                setActivityDrivers(data);
+
+            } catch {
+                setActivityDrivers([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+
+    }, [currentMonth, authFetch]);
+
+    const onMonthChange = (
+        e: React.ChangeEvent<HTMLSelectElement>
+    ) => {
         setCurrentMonth(e.target.value);
     };
 
@@ -49,8 +91,8 @@ export default function RankingList() {
                         value={currentMonth}
                         onChange={onMonthChange}
                     >
-                        {months.map((month, index) => (
-                            <option key={index} value={month}>
+                        {months.map((month) => (
+                            <option key={month} value={month}>
                                 {month}
                             </option>
                         ))}
@@ -77,8 +119,11 @@ export default function RankingList() {
                 w wybranym miesiącu.
             </div>
 
-            {/* TABLE */}
-            {activityDrivers.length > 0 ? (
+            {loading ? (
+                <div className="mt-10 text-center">
+                    <span className="loading loading-spinner loading-md"></span>
+                </div>
+            ) : activityDrivers.length > 0 ? (
                 <div className="bg-base-100 shadow rounded-2xl p-5">
                     <div className="overflow-x-auto">
                         <table className="table table-zebra">
@@ -93,7 +138,7 @@ export default function RankingList() {
                             </thead>
                             <tbody>
                             {activityDrivers.map((driver, index) => (
-                                <tr key={index}>
+                                <tr key={driver.driver.id}>
                                     <td className="font-medium">
                                         {index + 1}
                                     </td>

@@ -2,23 +2,34 @@ import { useAuth } from "../providers/AuthProvider";
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-export default function DriverList({ drivers }) {
-    const { uploadDriver } = useAuth();
+interface Driver {
+    id: number;
+    name: string;
+    carNumber: string;
+}
 
-    const [searchValue, setSearchValue] = useState("");
-    const [filteredDrivers, setFilteredDrivers] = useState([]);
-    const [isUploading, setIsUploading] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isError, setIsError] = useState(false);
+interface DriverListProps {
+    drivers: Driver[];
+}
 
+export default function DriverList({ drivers }: DriverListProps) {
+
+    const { authFetch, addDriverToUser } = useAuth();
+
+    const [searchValue, setSearchValue] = useState<string>("");
+    const [filteredDrivers, setFilteredDrivers] = useState<Driver[]>([]);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
 
     useEffect(() => {
         setFilteredDrivers(drivers);
     }, [drivers]);
 
-    const onUploadDriver = async (e) => {
-        const file = e.target.files[0];
-
+    const onUploadDriver = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = e.target.files?.[0];
         if (!file) return;
 
         setIsSuccess(false);
@@ -33,19 +44,25 @@ export default function DriverList({ drivers }) {
 
         const reader = new FileReader();
 
-        reader.onload = async (event) => {
-            const dataUrl = event.target.result;
-            const content = dataUrl.split(",")[1];
-
+        reader.onload = async () => {
             try {
-                const result = await uploadDriver({
-                    file: content,
+                const result = reader.result as string;
+                const content = result.split(",")[1];
+
+                const response = await authFetch("/api/driver/upload", {
+                    method: "POST",
+                    body: JSON.stringify({ file: content }),
                 });
 
-                if (result) {
-                    setIsSuccess(true);
+                if (!response.ok) {
+                    throw new Error();
                 }
-            } catch (error) {
+                const data = await response.json();
+                addDriverToUser(data);
+
+                setIsSuccess(true);
+
+            } catch {
                 setIsError(true);
             } finally {
                 setIsUploading(false);
@@ -55,14 +72,25 @@ export default function DriverList({ drivers }) {
         reader.readAsDataURL(file);
     };
 
-    const findDrivers = (event) => {
-        const value = event.target.value.toLowerCase().replace(/\s+/g, "");
+    const findDrivers = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const value = event.target.value
+            .toLowerCase()
+            .replace(/\s+/g, "");
+
         setSearchValue(value);
 
         const newDrivers = drivers.filter(
             (driver) =>
-                driver.name.toLowerCase().replace(/\s+/g, "").includes(value) ||
-                driver.carNumber.toLowerCase().replace(/\s+/g, "").includes(value)
+                driver.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "")
+                    .includes(value) ||
+                driver.carNumber
+                    .toLowerCase()
+                    .replace(/\s+/g, "")
+                    .includes(value)
         );
 
         setFilteredDrivers(newDrivers);
@@ -137,24 +165,26 @@ export default function DriverList({ drivers }) {
                 </div>
             </div>
 
+            {/* Search */}
+            <label className="input input-bordered flex items-center gap-2 w-64 shadow mb-5">
+                <input
+                    type="text"
+                    className="grow"
+                    placeholder="Znajdź kierowcę"
+                    value={searchValue}
+                    onChange={findDrivers}
+                />
+            </label>
+
             {/* Table or Empty State */}
             {filteredDrivers.length > 0 ? (
                 <>
-                    {/* Driver Header */}
                     <div className="flex justify-between items-center mb-4">
-                        <p className="font-semibold text-2xl">Twoi kierowcy ({filteredDrivers.length})</p>
+                        <p className="font-semibold text-2xl">
+                            Twoi kierowcy ({drivers.length})
+                        </p>
                     </div>
 
-                    {/* Search */}
-                    <label className="input input-bordered flex items-center gap-2 w-64 shadow mb-5">
-                        <input
-                            type="text"
-                            className="grow"
-                            placeholder="Znajdź kierowcę"
-                            value={searchValue}
-                            onChange={findDrivers}
-                        />
-                    </label>
                     <div className="bg-base-100 shadow rounded-2xl p-5">
                         <div className="overflow-x-auto">
                             <table className="table">
@@ -186,9 +216,9 @@ export default function DriverList({ drivers }) {
                                             </div>
                                         </td>
                                         <td>
-                      <span className="font-bold">
-                        {driver.carNumber}
-                      </span>
+                                            <span className="font-bold">
+                                                {driver.carNumber}
+                                            </span>
                                         </td>
                                         <td>
                                             <div className="flex gap-3">

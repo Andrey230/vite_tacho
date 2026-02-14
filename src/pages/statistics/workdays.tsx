@@ -1,53 +1,28 @@
-import { NavLink, redirect, useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDocument from "../pdf/pdfDocument.tsx";
+import { useAuth } from "../../providers/AuthProvider";
 
-const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
+interface WorkdayItem {
+    work: number;
+    dayOff: number;
+    totalDistance: number;
+}
 
-export async function loader({ params }) {
-    let data = {};
-
-    const now = new Date();
-
-    const to = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-
-    const fromDate = new Date(now);
-    fromDate.setFullYear(fromDate.getFullYear() - 1);
-
-    const from = `${fromDate.getFullYear()}-${String(fromDate.getMonth() + 1).padStart(2, "0")}`;
-
-    const query = new URLSearchParams({
-        from,
-        to,
-    }).toString();
-
-    try {
-        const response = await fetch(
-            `${baseUrl}/api/driver-statistics/${params.driver_id}?${query}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + localStorage.getItem("token"),
-                },
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("User info failed");
-        }
-
-        data = await response.json();
-    } catch (error) {
-        return redirect("/");
-    }
-
-    return { data, driverId: params.driver_id };
+interface WorkdaysResponse {
+    driver: {
+        id: number;
+        name: string;
+    };
+    items: Record<string, WorkdayItem>;
+    totalDaysOff: number;
 }
 
 export default function Workdays() {
-    const { data, driverId } = useLoaderData();
+
+    const { driver_id } = useParams<{ driver_id: string }>();
+    const { authFetch } = useAuth();
 
     const now = new Date();
     const currentMonth = now.toISOString().slice(0, 7);
@@ -56,56 +31,69 @@ export default function Workdays() {
     lastYear.setFullYear(lastYear.getFullYear() - 1);
     const defaultFrom = lastYear.toISOString().slice(0, 7);
 
-    const [from, setFrom] = useState(defaultFrom);
-    const [to, setTo] = useState(currentMonth);
-    const [totalDaysOff, setTotalDaysOff] = useState(data.totalDaysOff);
-    const [items, setItems] = useState(data.items);
+    const [from, setFrom] = useState<string>(defaultFrom);
+    const [to, setTo] = useState<string>(currentMonth);
 
-    const handleFromChange = (e) => {
+    const [data, setData] = useState<WorkdaysResponse | null>(null);
+    const [items, setItems] = useState<Record<string, WorkdayItem>>({});
+    const [totalDaysOff, setTotalDaysOff] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const handleFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFrom(e.target.value);
     };
 
-    const handleToChange = (e) => {
+    const handleToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTo(e.target.value);
     };
 
     useEffect(() => {
 
-        console.log(to, from);
-
+        if (!driver_id) return;
         if (!from || !to) return;
         if (from > to) return;
 
         const fetchStatistics = async () => {
+
+            setLoading(true);
+
             try {
                 const query = new URLSearchParams({ from, to }).toString();
 
-                const response = await fetch(
-                    `${baseUrl}/api/driver-statistics/${driverId}?${query}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + localStorage.getItem("token"),
-                        },
-                    }
+                const response = await authFetch(
+                    `/api/driver-statistics/${driver_id}?${query}`
                 );
 
                 if (!response.ok) {
-                    throw new Error("Statistics fetch failed");
+                    throw new Error();
                 }
 
-                const result = await response.json();
+                const result: WorkdaysResponse = await response.json();
 
+                setData(result);
                 setItems(result.items);
                 setTotalDaysOff(result.totalDaysOff);
+
             } catch (error) {
                 console.error(error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchStatistics();
-    }, [from, to, driverId]);
+
+    }, [driver_id, from, to, authFetch]);
+
+    if (loading && !data) {
+        return (
+            <div className="flex justify-center mt-20">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
+
+    if (!data) return null;
 
     return (
         <>
@@ -113,17 +101,14 @@ export default function Workdays() {
                 <h1 className="text-3xl">{data.driver.name}</h1>
 
                 <PDFDownloadLink
-                    document={
-                        <PdfDocument
-                            items={items}
-                        />
-                    }
+                    document={<PdfDocument items={items} />}
                     fileName={`statystyki_${data.driver.name.replace(/\s+/g, '_')}_${from}_${to}.pdf`}
                     className="btn btn-primary btn-sm md:btn-md"
                 >
                     PDF
                 </PDFDownloadLink>
             </div>
+
             <div className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
                 <div className="flex flex-col gap-3 md:flex-row md:gap-5 md:items-center">
                     <fieldset className="fieldset">
@@ -166,7 +151,7 @@ export default function Workdays() {
 
                     const formattedMonth = new Intl.DateTimeFormat(
                         "pl-PL",
-                        {month: "long", year: "2-digit"}
+                        { month: "long", year: "2-digit" }
                     )
                         .format(date)
                         .replace(/^./, c => c.toUpperCase());
@@ -184,31 +169,26 @@ export default function Workdays() {
                                 <h2 className="card-title text-lg">
                                     {formattedMonth}
                                 </h2>
+
                                 <div className="flex justify-between items-center">
-                        <span className="text-sm opacity-70">
-                            Przebieg
-                        </span>
+                                    <span className="text-sm opacity-70">Przebieg</span>
                                     <span className="text font-semibold">
-                            {item.totalDistance} km
-                        </span>
+                                        {item.totalDistance} km
+                                    </span>
                                 </div>
 
                                 <div className="flex justify-between items-center">
-                        <span className="text-sm opacity-70">
-                            Dni robocze
-                        </span>
+                                    <span className="text-sm opacity-70">Dni robocze</span>
                                     <span className="text-success font-semibold">
-                            {item.work}
-                        </span>
+                                        {item.work}
+                                    </span>
                                 </div>
 
                                 <div className="flex justify-between items-center">
-                        <span className="text-sm opacity-70">
-                            Reszta
-                        </span>
+                                    <span className="text-sm opacity-70">Reszta</span>
                                     <span className="text-error font-semibold">
-                            {item.dayOff}
-                        </span>
+                                        {item.dayOff}
+                                    </span>
                                 </div>
 
                                 <progress
@@ -244,7 +224,7 @@ export default function Workdays() {
 
                         const formattedMonth = new Intl.DateTimeFormat(
                             "pl-PL",
-                            {month: "long", year: "2-digit"}
+                            { month: "long", year: "2-digit" }
                         )
                             .format(date)
                             .replace(/^./, c => c.toUpperCase());

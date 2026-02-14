@@ -1,251 +1,214 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    ReactNode,
+} from "react";
 
 const baseUrl = import.meta.env.VITE_ENDPOINT_BACKEND;
 
-const AuthContext = createContext({});
+interface User {
+    id: number;
+    email: string;
+    roles: string[];
+    drivers: Driver[];
+    [key: string]: any;
+}
 
+interface Driver {
+    id: number;
+    name: string;
+    carNumber: string;
+    cardId?: string;
+}
 
-export const useAuth = () => useContext(AuthContext);
+interface AuthContextType {
+    user: User | null;
+    token: string | null;
+    loading: boolean;
+    isAuthenticated: boolean;
+    login: (credentials: { email: string; password: string }) => Promise<boolean>;
+    logout: () => void;
+    authFetch: (url: string, options?: RequestInit) => Promise<Response>;
+    signUp: (credentials: {
+        email: string;
+        password: string;
+        name: string;
+        fullDayStart: number;
+        fullDayEnd: number;
+    }) => Promise<boolean>;
+    addDriverToUser: (driver: Driver) => void;
+}
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState<null|object>(null);
-    const [token, setToken] = useState<null|string>(localStorage.getItem('token'));
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+export const useAuth = (): AuthContextType => {
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth must be used inside AuthProvider");
+    }
+    return context;
+};
+
+interface Props {
+    children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: Props) => {
+    const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(
+        localStorage.getItem("token")
+    );
+    const [loading, setLoading] = useState(true);
+
+    // 🔹 Получение пользователя
+    const fetchUser = async (jwt: string) => {
+        const response = await fetch(`${baseUrl}/api/user`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Unauthorized");
+        }
+
+        return response.json();
+    };
+
+    // 🔹 Инициализация при старте
     useEffect(() => {
-        if(token){
-            getUserInfo(token).then((data) => setUser(data));
-        }else{
-            setUser(null);
-        }
-    }, [token]);
-
-    const login = async (credentials) => {
-        try {
-            const response = await fetch(baseUrl + "/api/login", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors',
-                body: JSON.stringify(credentials)
-            });
-
-            if(!response.ok){
-                throw new Error('Login failed');
+        const init = async () => {
+            if (token) {
+                try {
+                    const userData = await fetchUser(token);
+                    setUser(userData);
+                } catch {
+                    logout();
+                }
             }
+            setLoading(false);
+        };
 
-            const data = await response.json();
+        init();
+    }, []);
 
+    // 🔹 Login
+    const login = async (credentials: {
+        email: string;
+        password: string;
+    }): Promise<boolean> => {
+        const response = await fetch(`${baseUrl}/api/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
+        });
+
+        if (!response.ok) {
+            throw new Error("Login failed");
+        }
+
+        const data = await response.json();
+
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+
+        const userData = await fetchUser(data.token);
+        setUser(userData);
+
+        return true;
+    };
+
+    //Sign up
+    const signUp = async (credentials: {
+        email: string;
+        password: string;
+        name: string;
+        fullDayStart: number;
+        fullDayEnd: number;
+    }) => {
+
+        const response = await fetch(`${baseUrl}/api/users/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
+        });
+
+        if (!response.ok) {
+            throw new Error("Signup failed");
+        }
+
+        // если backend сразу возвращает token
+        const data = await response.json();
+
+        if (data.token) {
+            localStorage.setItem("token", data.token);
             setToken(data.token);
-            localStorage.setItem('token', data.token);
-            return true;
-        } catch (error) {
-            throw error;
-        }
-    }
 
-    const signUp = async (credentials) => {
-        try {
-            const response = await fetch(baseUrl + "/api/users/create", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(credentials)
-            });
-
-            if(!response.ok){
-                throw new Error('Signup failed');
-            }
-
-            const data = await response.json();
-
-            await login(credentials);
-            return true;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    const resetPassword = async (credentials) => {
-        try {
-            const response = await fetch(baseUrl + "/api/reset-password", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(credentials)
-            });
-
-            if(!response.ok){
-                throw new Error('Reset password failed');
-            }
-
-            return await response.json();
-
-        }catch (error) {
-            throw error;
-        }
-    }
-
-    const recoveryPassword = async (credentials) => {
-        try {
-            const response = await fetch(baseUrl + "/api/reset-password/confirm", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(credentials)
-            });
-
-            if(!response.ok){
-                throw new Error('Reset password failed');
-            }
-
-            return await response.json();
-
-        }catch (error) {
-            throw error;
-        }
-    }
-
-    const uploadDriver = async (credentials) => {
-        try {
-            const response = await fetch(baseUrl + "/api/driver/upload", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + token
-                },
-                body: JSON.stringify(credentials)
-            });
-
-            if(!response.ok){
-                throw new Error('createDriver failed');
-            }
-
-            const data = await response.json();
-            const userData = await getUserInfo(token);
+            const userData = await fetchUser(data.token);
             setUser(userData);
-            return data;
-        } catch (error) {
-            throw error;
         }
-    }
 
-    const uploadDriverFile = async (driver) => {
-        try {
-            const response = await fetch(baseUrl + `/api/drivers/${driver}/upload`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + token
-                }
-            });
-
-            if(!response.ok){
-                throw new Error('createDriver failed');
-            }
+        return true;
+    };
 
 
-            return await response.json();
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    const updateOptions = async (options) => {
-        try {
-            const response = await fetch(baseUrl + `/api/user/update`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + token
-                },
-                body: JSON.stringify(options)
-            });
-
-            if(!response.ok){
-                throw new Error('updateUser failed');
-            }
-
-            return await response.json();
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    const getActivitiesByMonth = async (month) => {
-        try {
-            const response = await fetch(baseUrl + "/api/users/month/" + month, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + token
-                }
-            });
-
-            if(!response.ok){
-                throw new Error('drivers-activity failed');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
-
-    const getDriverActivitiesByMonth = async (id, month) => {
-        try {
-            const response = await fetch(baseUrl + `/api/driver/${id}/${month}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + token
-                }
-            });
-
-            if(!response.ok){
-                throw new Error('getDriverActivitiesByMonth failed');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
-
-    const getUserInfo = async (token) => {
-        try {
-            const response = await fetch(baseUrl + "/api/user", {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': "Bearer " + token
-                }
-            });
-
-            if(!response.ok){
-                throw new Error('User info failed');
-            }
-
-            return await response.json();
-        } catch (error) {
-            logout();
-            window.location.replace("/login");
-        }
-    }
-
+    // 🔹 Logout
     const logout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
         setToken(null);
         setUser(null);
-        window.location.replace("/login");
-    }
+    };
+
+    const addDriverToUser = (driver: Driver) => {
+        setUser(prev => {
+            if (!prev) return prev;
+
+            return {
+                ...prev,
+                drivers: [...(prev.drivers || []), driver]
+            };
+        });
+    };
+
+    // 🔹 Централизованный fetch
+    const authFetch = async (
+        url: string,
+        options: RequestInit = {}
+    ): Promise<Response> => {
+        const response = await fetch(`${baseUrl}${url}`, {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {}),
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (response.status === 401) {
+            logout();
+        }
+
+        return response;
+    };
+
+    const value: AuthContextType = {
+        user,
+        token,
+        loading,
+        isAuthenticated: !!user,
+        login,
+        logout,
+        authFetch,
+        signUp,
+        addDriverToUser
+    };
 
     return (
-        <AuthContext.Provider value={{ user, login, token, logout, signUp, uploadDriver, uploadDriverFile, getActivitiesByMonth, updateOptions, getDriverActivitiesByMonth, resetPassword, recoveryPassword }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
-}
+};

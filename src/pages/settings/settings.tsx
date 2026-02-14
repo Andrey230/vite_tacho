@@ -1,12 +1,10 @@
 import {useAuth} from "../../providers/AuthProvider";
 import {useState} from "react";
-import {useNotification} from "../root";
 import {NotificationTypes} from "../../constants/NotificationTypes";
 
 export default function Settings(){
 
     const {user, updateOptions} = useAuth();
-    const {addNotification} = useNotification();
 
     if(!user){
         return "";
@@ -38,16 +36,8 @@ export default function Settings(){
                     nine_plus_drive: ninePlusDrive,
                 }
             });
-
-            addNotification({
-                type: NotificationTypes.SUCCESS,
-                message: 'Ustawienia zostały zapisane'
-            });
         }catch (error){
-            addNotification({
-                type: NotificationTypes.ERROR,
-                message: 'Coś poszło nie tak...'
-            });
+
         }
     }
 
