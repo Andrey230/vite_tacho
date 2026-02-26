@@ -152,7 +152,8 @@ export default function DriverLicense() {
             </h1>
 
             <p className="text-base-content/60 mb-8">
-                Dodaj kierowców do systemu monitorowania ważności prawa jazdy.
+                Zarządzaj ważnością praw jazdy kierowców bez ryzyka przeoczenia terminu.
+                System działa automatycznie — regularnie weryfikuje status dokumentów i wysyła powiadomienia e-mail w przypadku problemów.
             </p>
 
             {/* FORM */}
