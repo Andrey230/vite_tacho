@@ -23,6 +23,7 @@ import Landing from "./pages/landing/landing.tsx";
 import Rules from "./pages/rules/rules.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 import RedirectIfAuth from "./components/RedirectIfAuth.tsx";
+import DriverLicense from "./pages/driver-license/driverLicense.tsx";
 
 const router = createBrowserRouter([
     {
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
                         path: "/driver/:driver_id",
                         element: <View />,
                     },
+                    { path: "/driver-license", element: <DriverLicense />}
                 ]
             },
 
