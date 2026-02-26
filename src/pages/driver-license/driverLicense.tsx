@@ -1,6 +1,11 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useAuth } from "../../providers/AuthProvider.tsx";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface Driver {
     id: number;
@@ -285,9 +290,10 @@ export default function DriverLicense() {
                                         </td>
                                         <td>
                                             {license.valid_until
-                                                ? dayjs(
-                                                    license.valid_until
-                                                ).format("DD.MM.YYYY")
+                                                ? dayjs
+                                                    .utc(license.valid_until)
+                                                    .local()
+                                                    .format("DD.MM.YYYY")
                                                 : "-"}
                                         </td>
                                         <td>
@@ -297,9 +303,10 @@ export default function DriverLicense() {
                                         </td>
                                         <td>
                                             {license.last_checked_at
-                                                ? dayjs(
-                                                    license.last_checked_at
-                                                ).format("DD.MM.YYYY HH:mm")
+                                                ? dayjs
+                                                    .utc(license.last_checked_at)
+                                                    .local()
+                                                    .format("DD.MM.YYYY HH:mm")
                                                 : "-"}
                                         </td>
                                     </tr>
