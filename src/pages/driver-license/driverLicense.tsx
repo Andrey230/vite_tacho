@@ -74,8 +74,8 @@ export default function DriverLicense() {
                 blankiet: blankietNumber,
             }
             : {
-                firstName,
-                lastName,
+                first_name: firstName,
+                last_name: lastName,
                 blankiet: blankietNumber,
             };
 
