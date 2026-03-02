@@ -338,7 +338,7 @@ export default function Documents() {
                                         <td>{doc.type}</td>
                                         <td>
                                             {doc.driver
-                                                ? `Driver #${doc.driver}`
+                                                ? doc.driver
                                                 : doc.vehicleRegistration
                                                     ? doc.vehicleRegistration
                                                     : "Firma"}
