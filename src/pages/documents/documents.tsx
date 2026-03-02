@@ -137,21 +137,40 @@ export default function Documents() {
     // ---------------- STATUS ----------------
 
     const getStatusBadge = (date: string) => {
-        const diff = dayjs(date).diff(dayjs(), "day");
+        const diff = dayjs(date).startOf("day").diff(
+            dayjs().startOf("day"),
+            "day"
+        );
 
         if (diff < 0) {
-            return <span className="badge badge-error">Wygasło</span>;
+            return (
+                <span className="badge badge-error">
+                Wygasło
+            </span>
+            );
+        }
+
+        if (diff <= 7) {
+            return (
+                <span className="badge badge-error">
+                Za {diff} dni
+            </span>
+            );
         }
 
         if (diff <= 30) {
             return (
                 <span className="badge badge-warning">
-                    Wygasa wkrótce
-                </span>
+                Za {diff} dni
+            </span>
             );
         }
 
-        return <span className="badge badge-success">Aktywne</span>;
+        return (
+            <span className="badge badge-success">
+            Aktywne
+        </span>
+        );
     };
 
     return (
