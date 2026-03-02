@@ -13,7 +13,7 @@ interface DocumentItem {
     title: string;
     description: string | null;
     validTo: string;
-    driver: number | null;
+    driver: string | null;
     vehicleRegistration: string | null;
     createdAt: string;
 }
