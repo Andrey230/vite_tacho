@@ -1,6 +1,5 @@
-import {NavLink} from "react-router-dom";
+
 import {useState} from "react";
-import {useAuth} from "../providers/AuthProvider";
 
 export default function ForgotPassword()
 {
@@ -8,8 +7,6 @@ export default function ForgotPassword()
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    const {resetPassword} = useAuth();
 
     const onEmailChange = (e) => {
         setEmail(e.target.value);

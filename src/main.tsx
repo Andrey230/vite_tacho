@@ -24,6 +24,7 @@ import Rules from "./pages/rules/rules.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 import RedirectIfAuth from "./components/RedirectIfAuth.tsx";
 import DriverLicense from "./pages/driver-license/driverLicense.tsx";
+import Documents from "./pages/documents/documents.tsx";
 
 const router = createBrowserRouter([
     {
@@ -61,7 +62,8 @@ const router = createBrowserRouter([
                         path: "/driver/:driver_id",
                         element: <View />,
                     },
-                    { path: "/driver-license", element: <DriverLicense />}
+                    { path: "/driver-license", element: <DriverLicense />},
+                    {path: "/documents", element: <Documents />}
                 ]
             },
 
