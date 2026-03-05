@@ -25,12 +25,6 @@ export default function UserMenu() {
                     <Link to="/" onClick={closeDropdown}>Profil</Link>
                 </li>
                 <li>
-                    <Link to="/driver-license" onClick={closeDropdown}>Prawo jazdy</Link>
-                </li>
-                <li>
-                    <Link to="/documents" onClick={closeDropdown}>Documenty</Link>
-                </li>
-                <li>
                     <Link to="/statistics" onClick={closeDropdown}>Statystyka</Link>
                 </li>
             </ul>
@@ -43,6 +37,12 @@ export default function UserMenu() {
                 </div>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                     {user ? <>
+                            <li>
+                                <Link to="/driver-license" onClick={closeDropdown}>Prawo jazdy</Link>
+                            </li>
+                            <li>
+                                <Link to="/documents" onClick={closeDropdown}>Documenty</Link>
+                            </li>
                             <li>
                                 <Link to="/settings" onClick={closeDropdown}>Ustawenia</Link>
                             </li>
