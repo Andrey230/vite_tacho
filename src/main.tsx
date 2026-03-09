@@ -25,6 +25,8 @@ import RequireAuth from "./components/RequireAuth.tsx";
 import RedirectIfAuth from "./components/RedirectIfAuth.tsx";
 import DriverLicense from "./pages/driver-license/driverLicense.tsx";
 import Documents from "./pages/documents/documents.tsx";
+import DriverProfile from "./pages/driverProfile/driverProfile.tsx";
+import VehicleProfile from "./pages/vehicle-profile/vehicleProfile.tsx";
 
 const router = createBrowserRouter([
     {
@@ -58,10 +60,12 @@ const router = createBrowserRouter([
                     { path: "/statistics", element: <Statistics /> },
                     { path: "/settings", element: <Settings /> },
                     { path: "/driver/:driver_id", element: <View /> },
-                    {
-                        path: "/driver/:driver_id",
-                        element: <View />,
-                    },
+                    { path: "/driver-profile/:id", element: <DriverProfile /> },
+                    { path: "/vehicle/:number", element: <VehicleProfile /> },
+                    // {
+                    //     path: "/driver/:driver_id",
+                    //     element: <View />,
+                    // },
                     { path: "/driver-license", element: <DriverLicense />},
                     {path: "/documents", element: <Documents />}
                 ]

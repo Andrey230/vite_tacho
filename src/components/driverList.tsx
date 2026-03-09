@@ -210,7 +210,12 @@ export default function DriverList({ drivers }: DriverListProps) {
                                                 </div>
                                                 <div>
                                                     <div className="font-bold">
-                                                        {driver.name}
+                                                        <NavLink
+                                                            to={`/driver-profile/${driver.id}`}
+                                                            className="link link-primary"
+                                                        >
+                                                            {driver.name}
+                                                        </NavLink>
                                                     </div>
                                                 </div>
                                             </div>
