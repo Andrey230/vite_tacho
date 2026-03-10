@@ -10,6 +10,7 @@ interface Driver {
     cardId: string | null;
     licenceNumber: string | null;
     documents: DocumentItem[];
+    notes: NoteItem[];
     driverLicense: {
         id: number;
         blankiet_number: string;
@@ -23,6 +24,12 @@ interface DocumentItem {
     title: string;
     validTo: string;
     type: string;
+}
+
+interface NoteItem {
+    id: number;
+    text: string;
+    createdAt: string;
 }
 
 export default function DriverProfile() {
@@ -40,6 +47,8 @@ export default function DriverProfile() {
     const [licenseError, setLicenseError] = useState<string | null>(null);
     const [documentError, setDocumentError] = useState<string | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+    const [noteText, setNoteText] = useState("");
+    const [noteError, setNoteError] = useState<string | null>(null);
 
     const fetchDriver = async () => {
 
@@ -89,6 +98,45 @@ export default function DriverProfile() {
         } catch (e) {
 
             console.error(e);
+
+        }
+
+    };
+
+    const handleNoteSubmit = async () => {
+
+        setNoteError(null);
+
+        if (!noteText.trim()) {
+            setNoteError("Treść notatki nie może być pusta.");
+            return;
+        }
+
+        try {
+
+            const res = await authFetch(`/api/notes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    text: noteText,
+                    driver: id
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error();
+            }
+
+            setNoteText("");
+
+            await fetchDriver();
+
+        } catch (e) {
+
+            console.error(e);
+            setNoteError("Nie udało się zapisać notatki.");
 
         }
 
@@ -263,7 +311,12 @@ export default function DriverProfile() {
                                     Samochód:
                                 </span>
                                 <div className="font-semibold">
-                                    {driver.carNumber}
+                                    <NavLink
+                                        to={`/vehicle/${driver.carNumber}`}
+                                        className="link link-primary"
+                                    >
+                                        {driver.carNumber}
+                                    </NavLink>
                                 </div>
                             </div>
                         )}
@@ -518,21 +571,69 @@ export default function DriverProfile() {
                         Notatki
                     </h2>
 
+                    {/* ADD NOTE */}
+
                     <div className="flex gap-3 mt-4">
 
-                        <textarea
-                            className="textarea textarea-bordered flex-1"
-                            placeholder="Dodaj notatkę o kierowcy..."
-                        />
+            <textarea
+                className="textarea textarea-bordered flex-1"
+                placeholder="Dodaj notatkę o kierowcy..."
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+            />
 
-                        <button className="btn btn-primary h-fit">
+                        <button
+                            className="btn btn-primary h-fit"
+                            onClick={handleNoteSubmit}
+                        >
                             Dodaj
                         </button>
 
                     </div>
 
-                </div>
+                    {noteError && (
+                        <p className="text-error text-sm mt-2">
+                            {noteError}
+                        </p>
+                    )}
 
+                    <div className="divider"></div>
+
+                    {/* NOTES LIST */}
+
+                    {driver.notes?.length === 0 ? (
+
+                        <p className="text-base-content/60">
+                            Brak notatek.
+                        </p>
+
+                    ) : (
+
+                        <div className="max-h-80 overflow-y-auto pr-2 space-y-4">
+
+                            {[...driver.notes].reverse().map((note, index) => (
+
+                                <div
+                                    key={index}
+                                    className="bg-base-200 rounded-xl p-4"
+                                >
+
+                                    <div className="text-xs text-base-content/60 mb-2">
+                                        {dayjs(note.createdAt).format("DD.MM.YYYY HH:mm")}
+                                    </div>
+
+                                    <p className="text-sm leading-relaxed">
+                                        {note.text}
+                                    </p>
+
+                                </div>
+
+                            ))}
+
+                        </div>
+
+                    )}
+                </div>
             </div>
 
         </div>

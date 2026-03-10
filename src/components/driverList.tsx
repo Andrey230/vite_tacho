@@ -222,7 +222,12 @@ export default function DriverList({ drivers }: DriverListProps) {
                                         </td>
                                         <td>
                                             <span className="font-bold">
-                                                {driver.carNumber}
+                                                <NavLink
+                                                    to={`/vehicle/${driver.carNumber}`}
+                                                    className="link link-primary"
+                                                >
+                                                    {driver.carNumber}
+                                                </NavLink>
                                             </span>
                                         </td>
                                         <td>
