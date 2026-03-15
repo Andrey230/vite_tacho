@@ -27,6 +27,8 @@ import DriverLicense from "./pages/driver-license/driverLicense.tsx";
 import Documents from "./pages/documents/documents.tsx";
 import DriverProfile from "./pages/driverProfile/driverProfile.tsx";
 import VehicleProfile from "./pages/vehicle-profile/vehicleProfile.tsx";
+import TrailerList from "./pages/trailer/trailerList.tsx";
+import TrailerProfile from "./pages/trailer/TrailerProfile.tsx";
 
 const router = createBrowserRouter([
     {
@@ -67,7 +69,9 @@ const router = createBrowserRouter([
                     //     element: <View />,
                     // },
                     { path: "/driver-license", element: <DriverLicense />},
-                    {path: "/documents", element: <Documents />}
+                    {path: "/documents", element: <Documents />},
+                    {path: "/trailers", element: <TrailerList />},
+                    { path: "/trailer/:id", element: <TrailerProfile /> },
                 ]
             },
 

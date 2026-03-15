@@ -44,6 +44,9 @@ export default function UserMenu() {
                                 <Link to="/documents" onClick={closeDropdown}>Documenty</Link>
                             </li>
                             <li>
+                                <Link to="/trailers" onClick={closeDropdown}>Przyczepy</Link>
+                            </li>
+                            <li>
                                 <Link to="/settings" onClick={closeDropdown}>Ustawenia</Link>
                             </li>
                             <li>
