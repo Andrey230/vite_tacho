@@ -13,7 +13,7 @@ const features = [
     },
     {
         title: "Kontrola praw jazdy",
-        desc: "Śledzenie aktualności praw jazdy (funkcja w przygotowaniu).",
+        desc: "Śledzenie aktualności praw jazdy.",
     },
 ];
 

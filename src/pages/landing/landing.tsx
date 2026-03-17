@@ -5,6 +5,8 @@ import WhoIsItFor from "./components/whoIsItFor.tsx";
 import CTA from "./components/cta.tsx";
 import FleetStatistics from "./components/fleetStatistics.tsx";
 import Contact from "./components/contact.tsx";
+import LicenseCheck from "./components/licenseCheck.tsx";
+import DocumentControl from "./components/documentControl.tsx";
 
 export default function Landing(){
     return (
@@ -12,6 +14,8 @@ export default function Landing(){
             <Hero />
             <Features />
             <LiveDemo />
+            <LicenseCheck />
+            <DocumentControl />
             <FleetStatistics />
             <WhoIsItFor />
             <CTA />
