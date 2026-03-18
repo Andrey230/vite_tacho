@@ -81,7 +81,7 @@ export default function TrailerList() {
 
             console.error(e);
 
-            setError("Nie udało się dodać przyczepy.");
+            setError("Nie udało się dodać naczepy.");
 
         }
 
@@ -133,11 +133,11 @@ export default function TrailerList() {
                 <div className="card-body">
 
                     <h1 className="text-3xl font-bold">
-                        Przyczepy
+                        Naczepy
                     </h1>
 
                     <p className="text-base-content/60">
-                        Zarządzanie przyczepami w systemie.
+                        Zarządzanie naczepami w systemie.
                     </p>
 
                 </div>
@@ -151,7 +151,7 @@ export default function TrailerList() {
                 <div className="card-body">
 
                     <h2 className="card-title">
-                        Dodaj przyczepę
+                        Dodaj naczepę
                     </h2>
 
                     <div className="flex gap-3 mt-4">
@@ -190,13 +190,13 @@ export default function TrailerList() {
                 <div className="card-body">
 
                     <h2 className="card-title">
-                        Lista przyczep
+                        Lista naczep
                     </h2>
 
                     {trailers.length === 0 ? (
 
                         <p className="text-base-content/60 mt-4">
-                            Brak przyczep w systemie.
+                            Brak naczep w systemie.
                         </p>
 
                     ) : (

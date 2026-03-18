@@ -197,7 +197,7 @@ export default function TrailerProfile() {
     }
 
     if (!trailer) {
-        return <p>Przyczepa nie została znaleziona.</p>;
+        return <p>Naczepa nie została znaleziona.</p>;
     }
 
     return (
