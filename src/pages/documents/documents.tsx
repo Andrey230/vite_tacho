@@ -1,5 +1,6 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useAuth } from "../../providers/AuthProvider.tsx";
+import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 
 interface Driver {
@@ -13,8 +14,18 @@ interface DocumentItem {
     title: string;
     description: string | null;
     validTo: string;
-    driver: string | null;
-    vehicleRegistration: string | null;
+    driver: {
+        id: number;
+        name: string;
+    } | null;
+    vehicle: {
+        id: number;
+        registrationNumber: string;
+    } | null;
+    trailer: {
+        id: number;
+        registrationNumber: string;
+    } | null;
     createdAt: string;
 }
 
@@ -41,6 +52,8 @@ export default function Documents() {
     const [description, setDescription] = useState<string>("");
 
     const [validTo, setValidTo] = useState<string>("");
+
+    console.log(documents);
 
     // ---------------- FETCH DOCUMENTS ----------------
 
@@ -410,10 +423,10 @@ export default function Documents() {
                                 <tr>
                                     <th>ID</th>
                                     <th>Tytuł</th>
-                                    <th>Typ</th>
                                     <th>Dotyczy</th>
                                     <th>Ważne do</th>
                                     <th>Status</th>
+                                    <th>Opis</th>
                                     <th>Akcje</th>
                                 </tr>
                                 </thead>
@@ -430,14 +443,20 @@ export default function Documents() {
                                             {doc.title}
                                         </td>
 
-                                        <td>{doc.type}</td>
-
                                         <td>
-                                            {doc.driver
-                                                ? doc.driver
-                                                : doc.vehicleRegistration
-                                                    ? doc.vehicleRegistration
-                                                    : "Firma"}
+                                            {doc.vehicle ?  <NavLink
+                                                    to={`/driver/${doc.vehicle.registrationNumber}`}
+                                                    className="link link-primary"
+                                            >{doc.vehicle.registrationNumber}</NavLink> : null}
+                                            {doc.trailer ?  <NavLink
+                                                to={`/driver/${doc.trailer.id}`}
+                                                className="link link-primary"
+                                            >{doc.trailer.registrationNumber}</NavLink> : null}
+                                            {doc.driver ?  <NavLink
+                                                to={`/driver/${doc.driver.id}`}
+                                                className="link link-primary"
+                                            >{doc.driver.name}</NavLink> : null}
+                                            {doc.type === 'GENERAL' ? 'firma' : null}
                                         </td>
 
                                         <td>
@@ -446,6 +465,9 @@ export default function Documents() {
 
                                         <td>
                                             {getStatusBadge(doc.validTo)}
+                                        </td>
+                                        <td>
+                                            {doc.description}
                                         </td>
 
                                         <td>
