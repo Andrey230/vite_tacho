@@ -445,11 +445,11 @@ export default function Documents() {
 
                                         <td>
                                             {doc.vehicle ?  <NavLink
-                                                    to={`/driver/${doc.vehicle.registrationNumber}`}
+                                                    to={`/vehicle/${doc.vehicle.registrationNumber}`}
                                                     className="link link-primary"
                                             >{doc.vehicle.registrationNumber}</NavLink> : null}
                                             {doc.trailer ?  <NavLink
-                                                to={`/driver/${doc.trailer.id}`}
+                                                to={`/trailer/${doc.trailer.id}`}
                                                 className="link link-primary"
                                             >{doc.trailer.registrationNumber}</NavLink> : null}
                                             {doc.driver ?  <NavLink
