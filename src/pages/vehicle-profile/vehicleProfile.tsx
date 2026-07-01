@@ -9,6 +9,7 @@ interface DocumentItem {
     validTo: string;
     type: string;
     photoUrl: string | null;
+    createdAt: string;
 }
 
 interface NoteItem {
@@ -426,6 +427,7 @@ export default function VehicleProfile() {
                                 <tr>
                                     <th>Tytuł</th>
                                     <th>Ważne do</th>
+                                    <th>Dodano</th>
                                     <th>Status</th>
                                     <th>Zdjęcie</th>
                                     <th></th>
@@ -455,6 +457,10 @@ export default function VehicleProfile() {
 
                                             <td>
                                                 {dayjs(doc.validTo).format("DD.MM.YYYY")}
+                                            </td>
+
+                                            <td>
+                                                {dayjs(doc.createdAt).format("DD.MM.YYYY")}
                                             </td>
 
                                             <td>

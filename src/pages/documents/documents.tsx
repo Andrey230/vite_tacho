@@ -433,6 +433,7 @@ export default function Documents() {
                                     <th>Ważne do</th>
                                     <th>Status</th>
                                     <th>Opis</th>
+                                    <th>Dodano</th>
                                     <th>Zdjęcie</th>
                                     <th>Akcje</th>
                                 </tr>
@@ -475,6 +476,10 @@ export default function Documents() {
                                         </td>
                                         <td>
                                             {doc.description}
+                                        </td>
+
+                                        <td>
+                                            {dayjs(doc.createdAt).format("DD.MM.YYYY")}
                                         </td>
 
                                         <td>
