@@ -26,6 +26,7 @@ interface DocumentItem {
         id: number;
         registrationNumber: string;
     } | null;
+    photoUrl: string | null;
     createdAt: string;
 }
 
@@ -52,6 +53,7 @@ export default function Documents() {
     const [description, setDescription] = useState<string>("");
 
     const [validTo, setValidTo] = useState<string>("");
+    const [photo, setPhoto] = useState<File | null>(null);
 
     console.log(documents);
 
@@ -136,22 +138,18 @@ export default function Documents() {
 
         try {
 
-            const payload = {
-                type,
-                title,
-                description,
-                validTo,
-                driver: type === "DRIVER" ? Number(driverId) : null,
-                vehicleRegistration:
-                    type === "VEHICLE"
-                        ? vehicleRegistration.toUpperCase()
-                        : null,
-            };
+            const formData = new FormData();
+            formData.append("type", type);
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("validTo", validTo);
+            if (type === "DRIVER") formData.append("driver", driverId);
+            if (type === "VEHICLE") formData.append("vehicleRegistration", vehicleRegistration.toUpperCase());
+            if (photo) formData.append("photo", photo);
 
             const res = await authFetch("/api/document", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
+                body: formData,
             });
 
             if (!res.ok) throw new Error();
@@ -161,6 +159,7 @@ export default function Documents() {
             setDriverId("");
             setVehicleRegistration("");
             setValidTo("");
+            setPhoto(null);
 
             await fetchDocuments();
 
@@ -369,6 +368,13 @@ export default function Documents() {
                             }
                         />
 
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            className="file-input file-input-bordered w-full"
+                            onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+                        />
+
                         <button
                             type="submit"
                             className="btn btn-primary w-full"
@@ -427,6 +433,7 @@ export default function Documents() {
                                     <th>Ważne do</th>
                                     <th>Status</th>
                                     <th>Opis</th>
+                                    <th>Zdjęcie</th>
                                     <th>Akcje</th>
                                 </tr>
                                 </thead>
@@ -471,6 +478,18 @@ export default function Documents() {
                                         </td>
 
                                         <td>
+                                            {doc.photoUrl && (
+                                                <a href={doc.photoUrl} target="_blank" rel="noreferrer">
+                                                    <img
+                                                        src={doc.photoUrl}
+                                                        alt="dokument"
+                                                        className="w-12 h-12 object-cover rounded"
+                                                    />
+                                                </a>
+                                            )}
+                                        </td>
+
+                                        <td>
 
                                             <button
                                                 className={`btn btn-xs ${
@@ -503,7 +522,6 @@ export default function Documents() {
                                     </tr>
 
                                 ))}
-
                                 </tbody>
 
                             </table>

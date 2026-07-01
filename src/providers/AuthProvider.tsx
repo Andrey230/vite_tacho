@@ -178,10 +178,12 @@ export const AuthProvider = ({ children }: Props) => {
         url: string,
         options: RequestInit = {}
     ): Promise<Response> => {
+        const isFormData = options.body instanceof FormData;
+
         const response = await fetch(`${baseUrl}${url}`, {
             ...options,
             headers: {
-                "Content-Type": "application/json",
+                ...(isFormData ? {} : { "Content-Type": "application/json" }),
                 ...(options.headers || {}),
                 Authorization: `Bearer ${token}`,
             },
