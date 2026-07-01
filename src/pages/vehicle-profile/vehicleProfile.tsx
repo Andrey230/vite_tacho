@@ -8,6 +8,7 @@ interface DocumentItem {
     title: string;
     validTo: string;
     type: string;
+    photoUrl: string | null;
 }
 
 interface NoteItem {
@@ -36,6 +37,7 @@ export default function VehicleProfile() {
 
     const [docTitle, setDocTitle] = useState("");
     const [docValidTo, setDocValidTo] = useState("");
+    const [docPhoto, setDocPhoto] = useState<File | null>(null);
 
     const [documentError, setDocumentError] = useState<string | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
@@ -167,23 +169,23 @@ export default function VehicleProfile() {
 
         try {
 
+            const formData = new FormData();
+            formData.append("type", "VEHICLE");
+            formData.append("title", docTitle);
+            formData.append("validTo", docValidTo);
+            formData.append("vehicle", String(vehicle.id));
+            if (docPhoto) formData.append("photo", docPhoto);
+
             const res = await authFetch(`/api/document`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    type: "VEHICLE",
-                    title: docTitle,
-                    validTo: docValidTo,
-                    vehicle: vehicle.id,
-                }),
+                body: formData,
             });
 
             if (!res.ok) throw new Error();
 
             setDocTitle("");
             setDocValidTo("");
+            setDocPhoto(null);
 
             await fetchVehicle();
 
@@ -361,7 +363,7 @@ export default function VehicleProfile() {
 
                     <div className="bg-base-200 rounded-xl p-4 mt-4">
 
-                        <div className="grid md:grid-cols-3 gap-3">
+                        <div className="grid md:grid-cols-2 gap-3">
 
                             <input
                                 type="text"
@@ -376,6 +378,13 @@ export default function VehicleProfile() {
                                 className="input input-bordered w-full"
                                 value={docValidTo}
                                 onChange={(e) => setDocValidTo(e.target.value)}
+                            />
+
+                            <input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                className="file-input file-input-bordered w-full"
+                                onChange={(e) => setDocPhoto(e.target.files?.[0] ?? null)}
                             />
 
                             <button
@@ -418,6 +427,7 @@ export default function VehicleProfile() {
                                     <th>Tytuł</th>
                                     <th>Ważne do</th>
                                     <th>Status</th>
+                                    <th>Zdjęcie</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -449,6 +459,18 @@ export default function VehicleProfile() {
 
                                             <td>
                                                 {badge}
+                                            </td>
+
+                                            <td>
+                                                {doc.photoUrl && (
+                                                    <a href={doc.photoUrl} target="_blank" rel="noreferrer">
+                                                        <img
+                                                            src={doc.photoUrl}
+                                                            alt="dokument"
+                                                            className="w-12 h-12 object-cover rounded"
+                                                        />
+                                                    </a>
+                                                )}
                                             </td>
 
                                             <td className="text-right">
