@@ -8,7 +8,7 @@ interface DocumentItem {
     title: string;
     validTo: string;
     type: string;
-    photoUrl: string | null;
+    photoUrls: string[];
     createdAt: string;
 }
 
@@ -36,7 +36,7 @@ export default function TrailerProfile() {
 
     const [docTitle, setDocTitle] = useState("");
     const [docValidTo, setDocValidTo] = useState("");
-    const [docPhoto, setDocPhoto] = useState<File | null>(null);
+    const [docPhotos, setDocPhotos] = useState<File[]>([]);
 
     const [documentError, setDocumentError] = useState<string | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
@@ -124,7 +124,7 @@ export default function TrailerProfile() {
             formData.append("title", docTitle);
             formData.append("validTo", docValidTo);
             formData.append("trailer", String(trailer.id));
-            if (docPhoto) formData.append("photo", docPhoto);
+            docPhotos.forEach((file) => formData.append("photos[]", file));
 
             const res = await authFetch(`/api/document`, {
                 method: "POST",
@@ -135,7 +135,7 @@ export default function TrailerProfile() {
 
             setDocTitle("");
             setDocValidTo("");
-            setDocPhoto(null);
+            setDocPhotos([]);
 
             await fetchTrailer();
 
@@ -270,7 +270,8 @@ export default function TrailerProfile() {
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp,image/gif"
                                 className="file-input file-input-bordered w-full"
-                                onChange={(e) => setDocPhoto(e.target.files?.[0] ?? null)}
+                                multiple
+                                onChange={(e) => setDocPhotos(Array.from(e.target.files ?? []))}
                             />
 
                             <button
@@ -358,15 +359,17 @@ export default function TrailerProfile() {
                                             </td>
 
                                             <td>
-                                                {doc.photoUrl && (
-                                                    <a href={doc.photoUrl} target="_blank" rel="noreferrer">
-                                                        <img
-                                                            src={doc.photoUrl}
-                                                            alt="dokument"
-                                                            className="w-12 h-12 object-cover rounded"
-                                                        />
-                                                    </a>
-                                                )}
+                                                <div className="flex gap-1 flex-wrap">
+                                                    {doc.photoUrls.map((url) => (
+                                                        <a key={url} href={url} target="_blank" rel="noreferrer">
+                                                            <img
+                                                                src={url}
+                                                                alt="dokument"
+                                                                className="w-12 h-12 object-cover rounded"
+                                                            />
+                                                        </a>
+                                                    ))}
+                                                </div>
                                             </td>
 
                                             <td className="text-right">

@@ -26,7 +26,7 @@ interface DocumentItem {
         id: number;
         registrationNumber: string;
     } | null;
-    photoUrl: string | null;
+    photoUrls: string[];
     createdAt: string;
 }
 
@@ -53,7 +53,7 @@ export default function Documents() {
     const [description, setDescription] = useState<string>("");
 
     const [validTo, setValidTo] = useState<string>("");
-    const [photo, setPhoto] = useState<File | null>(null);
+    const [photos, setPhotos] = useState<File[]>([]);
 
     console.log(documents);
 
@@ -145,7 +145,7 @@ export default function Documents() {
             formData.append("validTo", validTo);
             if (type === "DRIVER") formData.append("driver", driverId);
             if (type === "VEHICLE") formData.append("vehicleRegistration", vehicleRegistration.toUpperCase());
-            if (photo) formData.append("photo", photo);
+            photos.forEach((file) => formData.append("photos[]", file));
 
             const res = await authFetch("/api/document", {
                 method: "POST",
@@ -159,7 +159,7 @@ export default function Documents() {
             setDriverId("");
             setVehicleRegistration("");
             setValidTo("");
-            setPhoto(null);
+            setPhotos([]);
 
             await fetchDocuments();
 
@@ -372,7 +372,8 @@ export default function Documents() {
                             type="file"
                             accept="image/jpeg,image/png,image/webp,image/gif"
                             className="file-input file-input-bordered w-full"
-                            onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+                            multiple
+                            onChange={(e) => setPhotos(Array.from(e.target.files ?? []))}
                         />
 
                         <button
@@ -483,15 +484,17 @@ export default function Documents() {
                                         </td>
 
                                         <td>
-                                            {doc.photoUrl && (
-                                                <a href={doc.photoUrl} target="_blank" rel="noreferrer">
-                                                    <img
-                                                        src={doc.photoUrl}
-                                                        alt="dokument"
-                                                        className="w-12 h-12 object-cover rounded"
-                                                    />
-                                                </a>
-                                            )}
+                                            <div className="flex gap-1 flex-wrap">
+                                                {doc.photoUrls.map((url) => (
+                                                    <a key={url} href={url} target="_blank" rel="noreferrer">
+                                                        <img
+                                                            src={url}
+                                                            alt="dokument"
+                                                            className="w-12 h-12 object-cover rounded"
+                                                        />
+                                                    </a>
+                                                ))}
+                                            </div>
                                         </td>
 
                                         <td>
